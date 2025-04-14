@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bgm/tictactoe_bgm_30s.mp3</file>
+    </qresource>
+</RCC>
