@@ -13,7 +13,7 @@ class Lobby : public QWidget
 
 public:
     explicit Lobby(QWidget *parent = nullptr);
-    void setBgImg();
+    void setTitleShadow();
     ~Lobby();
 signals:
     void goToLogin();

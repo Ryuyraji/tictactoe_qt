@@ -26,6 +26,7 @@ private:
     Ui::Form           *setting_ui;
     class QMediaPlayer *m_player;
     class QAudioOutput *m_audioOutput;
+    bool                music_on;
 };
 
 #endif // SETTING_H

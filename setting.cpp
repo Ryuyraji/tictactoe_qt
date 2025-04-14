@@ -12,14 +12,16 @@ Setting::Setting(QWidget *parent) : QWidget(parent), setting_ui(new Ui::Form) {
         emit returnToLobby();
     });
 
-    connect(setting_ui->musicState, &QCheckBox::checkStateChanged, this, [=](bool checked){
-        if(checked){
+    connect(setting_ui->musicState, &QPushButton::clicked, this, [=](){
+        if(!music_on){
             this->playMusic();
-            setting_ui->musicState->setText("   Music Off");
+            setting_ui->musicState->setText("Music Off");
+            music_on = true;
         }
         else{
             this->stopMusic();
-            setting_ui->musicState->setText("   Music On");
+            setting_ui->musicState->setText("Music On");
+            music_on = false;
         }
     });
 
@@ -29,6 +31,7 @@ Setting::Setting(QWidget *parent) : QWidget(parent), setting_ui(new Ui::Form) {
 }
 
 void Setting::bgm_init(){
+    music_on = true;
     m_player = new QMediaPlayer;
     m_audioOutput = new QAudioOutput;
     m_player->setAudioOutput(m_audioOutput);
@@ -37,14 +40,16 @@ void Setting::bgm_init(){
     float volValue = setting_ui->volumeSlider->value() / 100.0;
     m_audioOutput->setVolume(volValue);
 
-    m_player->setSource(QUrl("qrc:/bgm/tictactoe_bgm_30s.mp3"));
+    m_player->setSource(QUrl("qrc:/bgm/bgm.mp3"));
+    m_player->setLoops(QMediaPlayer::Infinite);
     m_player->play();
 }
 
 void Setting::playMusic(){
-    m_player->setSource(QUrl("qrc:/bgm/tictactoe_bgm_30s.mp3"));
+    m_player->setSource(QUrl("qrc:/bgm/bgm.mp3"));
     m_player->play();
 }
+
 void Setting::stopMusic(){
     int state = m_player->playbackState();
 

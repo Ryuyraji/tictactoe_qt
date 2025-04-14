@@ -1,13 +1,14 @@
 #include "lobby.h"
 #include "ui_lobby.h"
-#include <QPalette>
-#include <QPixmap>
+#include <QGraphicsDropShadowEffect>
 
 Lobby::Lobby(QWidget *parent)
     : QWidget(parent)
     , lobby_ui(new Ui::lobby)
 {
     lobby_ui->setupUi(this);
+    setTitleShadow();
+
     connect(lobby_ui->loginBtn, &QPushButton::clicked, this, [=](){
         emit goToLogin();
     });
@@ -25,6 +26,13 @@ Lobby::Lobby(QWidget *parent)
     });
 }
 
+void Lobby::setTitleShadow(){
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(12);                // how soft the shadow is
+    shadow->setColor(QColor(0, 0, 0, 200));  // shadow color and transparency
+    shadow->setOffset(7, 7);                 // offset (x, y)
+    lobby_ui->title->setGraphicsEffect(shadow);
+}
 Lobby::~Lobby()
 {
     delete lobby_ui;
