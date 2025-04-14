@@ -6,6 +6,7 @@ MyGame::MyGame(QWidget *parent)
     , ui(new Ui::MyGame)
 {
     ui->setupUi(this);
+    qDebug() << "hello" << "\n";
 }
 
 MyGame::~MyGame()
