@@ -26,6 +26,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         setting.h setting.cpp
         setting.ui
         resources.qrc
+        lobby.h lobby.cpp lobby.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET veda_qt APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

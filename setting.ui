@@ -88,9 +88,38 @@
     <rect>
      <x>30</x>
      <y>30</y>
-     <width>40</width>
-     <height>40</height>
+     <width>41</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>13 Klee</family>
+     <pointsize>25</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	font: 25pt bold &quot;Klee&quot;;
+	color: rgb(0,0,0);
+	background-color: rgb(212, 212, 212);
+	border: none;
+}
+
+QPushButton:hover{
+	background-color: rgb(222, 222, 222);
+}
+QPushButton:pressed{
+	background-color: rgb(180, 180, 180);
+}</string>
    </property>
    <property name="text">
     <string>&lt;</string>
