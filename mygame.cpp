@@ -1,9 +1,13 @@
 #include "mygame.h"
+#include "setting.h"
+#include "lobby.h"
 #include "./ui_mygame.h"
+#include <QStackedWidget>
+#include <QVBoxLayout>
 
 MyGame::MyGame(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::MyGame)
+    , myGame_ui(new Ui::MyGame)
 {
     ui->setupUi(this);
     qDebug() << "hello" << "\n";
@@ -11,5 +15,5 @@ MyGame::MyGame(QWidget *parent)
 
 MyGame::~MyGame()
 {
-    delete ui;
+    delete myGame_ui;
 }
