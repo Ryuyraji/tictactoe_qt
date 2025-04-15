@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
 
 Login::Login(QWidget *parent)
     : QWidget(parent)
@@ -17,6 +18,26 @@ Login::Login(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setContentsMargins(20, 20, 20, 20);
     mainLayout->setSpacing(15);
+
+    backBtn = new QPushButton(this);
+    backBtn->setStyleSheet("QPushButton{"
+                           "color:white;"
+                           "background-color: rgba(0,0,0,148);"
+                           "border:none;"
+                           "}"
+                           "QPushButton:hover{"
+                           "background-color: rgb(190,190,190);"
+                           "}"
+                           "QPushButton:pressed{"
+                           "background-color:rgb(170,170,170);"
+                           "}"
+                           );
+    backBtn->setFixedSize(41,41);
+    backBtn->move(30,30);
+    mainLayout->addWidget(backBtn);
+    connect(backBtn, &QPushButton::clicked, this, [=](){
+        emit returnToLobby();
+    });
 
     // "로그인" 텍스트
     QLabel *titleLabel = new QLabel("로그인");
@@ -38,6 +59,9 @@ Login::Login(QWidget *parent)
     pwinput->setEchoMode(QLineEdit::Password);
     pwinput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
     mainLayout->addWidget(pwinput);
+    //뒤로가기 버튼
+
+
 
     QString inputFilePath = ("../../../../../db/user.json");
     // JSON 파일 로딩

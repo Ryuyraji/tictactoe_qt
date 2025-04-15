@@ -23,7 +23,7 @@ private:
     QLineEdit *editPw;
     QPushButton *createButton;
     QJsonArray users1;
-
+    QPushButton *backBtn;
 
 };
 

@@ -21,7 +21,25 @@ Account::Account(QWidget *parent)
     // 전체 레이아웃
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(20, 20, 20, 20);
-
+    backBtn = new QPushButton(this);
+    backBtn->setStyleSheet("QPushButton{"
+                           "color:white;"
+                           "background-color: rgba(0,0,0,148);"
+                           "border:none;"
+                           "}"
+                           "QPushButton:hover{"
+                           "background-color: rgb(190,190,190);"
+                           "}"
+                           "QPushButton:pressed{"
+                           "background-color:rgb(170,170,170);"
+                           "}"
+                           );
+    backBtn->setFixedSize(41,41);
+    backBtn->move(30,30);
+    mainLayout->addWidget(backBtn);
+    connect(backBtn, &QPushButton::clicked, this, [=](){
+        emit returnToLogin();
+    });
 
     // 제목 라벨
     QLabel *titleLabel = new QLabel("계정 생성", this);
@@ -46,6 +64,7 @@ Account::Account(QWidget *parent)
     createButton = new QPushButton("계정 생성", this);
     createButton->setStyleSheet("color:black;padding: 6px; background-color: #cce0ff; border-radius: 8px;");
     mainLayout->addWidget(createButton);
+
 
     QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
     // JSON 파일 로딩

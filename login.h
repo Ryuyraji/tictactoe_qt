@@ -36,6 +36,7 @@ private:
     QLineEdit *pwinput;
     QByteArray data;
     QJsonArray users;
+    QPushButton *backBtn;
 
 
 };
