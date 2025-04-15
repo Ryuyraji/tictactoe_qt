@@ -32,6 +32,19 @@ DbManager::DbManager() {
         }
       }
     }
+    // for(int i = 0 ; i < 15; i++){
+        // QString id = "jason" + QString::number(i);
+        // QString pw = "123" + QString::number(i);
+        // QString nickname = "jj" + QString::number(i);
+        // QSqlQuery query(m_db);
+        // query.prepare("INSERT INTO userTable (user_id, user_pw, user_nickname, winPoint, lossPoint) VALUES (:USER_ID, :USER_PW, :USER_NICKNAME, :WIN, :LOSS)");
+        // query.bindValue(":USER_ID", id);
+        // query.bindValue(":USER_PW", pw);
+        // query.bindValue(":USER_NICKNAME", nickname);
+        // query.bindValue(":WIN", i+2);
+        // query.bindValue(":LOSS", i);
+        // query.exec();
+    // }
 }
 bool DbManager::addAccountInfo(const QString& id, const QString& pw, const QString& nickname){
     bool success = false;
