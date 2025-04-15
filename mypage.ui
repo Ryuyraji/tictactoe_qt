@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyPage</class>
+ <widget class="QWidget" name="MyPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QPushButton" name="updateBtn">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>180</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>수정하기</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="deleteBtn">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>230</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>삭제하기</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nicknameEdit">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>110</y>
+     <width>58</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>nickname</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="Account">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>240</y>
+     <width>58</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>account</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bg">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>800</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/img/tictactoe.png);
+                    background-repeat: no-repeat;
+                    background-position: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="page">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>400</width>
+     <height>600</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(169, 169, 169, 0.8);
+    width: 700px; 
+    height: 700px; 
+    border-radius: 20px; </string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>bg</zorder>
+  <zorder>updateBtn</zorder>
+  <zorder>deleteBtn</zorder>
+  <zorder>nicknameEdit</zorder>
+  <zorder>Account</zorder>
+  <zorder>page</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
