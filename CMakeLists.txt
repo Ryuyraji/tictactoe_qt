@@ -14,9 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
 
 set(PROJECT_SOURCES
         main.cpp
-        mygame.cpp
-        mygame.h
-        mygame.ui
+        login.cpp
+        login.h
+        login.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
