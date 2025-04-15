@@ -92,8 +92,8 @@ Login::Login(QWidget *parent)
         // }
 
         if (loginSuccess) {
-            QMessageBox::information(this, "로그인 성공", "환영합니다");
-
+            QMessageBox::information(this, "로그인 성공", "환영합니다 " + inputId +"님!");
+            user_id = inputId;
             idInput->clear();
             pwInput->clear();
             emit returnToLobby();

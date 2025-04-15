@@ -17,23 +17,20 @@ class Login : public QWidget
 public:
     Login(QWidget *parent = nullptr);
     ~Login();
-private:
-    Ui::Login *login_ui;
+    void make_account();
+    void compare(); // id일치 불일치rememberCheck
 
 signals:
     void goToCreateAccount();
     void returnToLobby();
 
 private:
-    void make_account();
-    void compare(); // id일치 불일치rememberCheck
-private:
+    Ui::Login *login_ui;
+    QString user_id;
     class QLineEdit *idInput;
     class QLineEdit *pwInput;
     QByteArray data;
     QJsonArray users;
     class QPushButton *backBtn;
-
-
 };
 #endif // LOGIN_H
