@@ -3,6 +3,7 @@
 #include "lobby.h"
 #include "login.h"
 #include "account.h"
+#include "tictactoe.h"
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
@@ -12,30 +13,38 @@ MyGame::MyGame(QWidget *parent)
 {
     this->setFixedSize(800, 800);
     stack = new QStackedWidget;
-    Lobby *lobby_window = new Lobby;
-    Login *login_window = new Login;
-    Account *create_account_window = new Account;
-    Setting *setting_window = new Setting;
-
+    // need QVBoxLayout to show the QStackedWidget
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(stack);
     this->setLayout(layout);
 
+    // stack all the widgets that we made onto QStacked Widget
+    Lobby *lobby_window = new Lobby;
     stack->addWidget(lobby_window);
+
+    Login *login_window = new Login;
     stack->addWidget(login_window);
+
+    Account *create_account_window = new Account;
     stack->addWidget(create_account_window);
-    //stack->addWidget(game_window);
-    //stack->addWidget(leaderboards_window);
+
+    Tictactoe *game_window = new Tictactoe;
+    stack->addWidget(game_window);
+
+    QWidget *leaderboards_window = new QWidget;
+    stack->addWidget(leaderboards_window);
+
+    Setting *setting_window = new Setting;
     stack->addWidget(setting_window);
-    stack->setCurrentIndex(0);
 
-    connect(setting_window, &Setting::returnToLobby, this, [=](){
-        stack->setCurrentIndex(LOBBY);
-    });
+    // set the current window as main lobby
+    stack->setCurrentIndex(LOBBY);
 
+    // signals & slots for each buttons
     connect(lobby_window, &Lobby::goToLogin, this, [=](){
         stack->setCurrentIndex(LOGIN);
     });
+
     connect(login_window, &Login::returnToLobby, this, [=](){
         stack->setCurrentIndex(LOBBY);
     });
@@ -48,20 +57,23 @@ MyGame::MyGame(QWidget *parent)
         stack->setCurrentIndex(LOGIN);
     });
 
-    connect(lobby_window, &Lobby::goToSetting, this, [=](){
-        stack->setCurrentIndex(3);
+    connect(lobby_window, &Lobby::playGame, this, [=](){
+        stack->setCurrentIndex(INGAME);
     });
 
-    // connect(lobby_window, &Lobby::playGame, this, [=](){
-    // stack->setCurrentIndex(INGAME);
-    // });
-    // connect(lobby_window, &Lobby::goToLeaderboards, this, [=](){
-    // stack->setCurrentIndex(LEADERBOARDS);
-    // });
-    // connect(lobby_window, &Lobby::goToSetting, this, [=](){
-    // stack->setCurrentIndex(SETTING);
-    // });
+    connect(game_window, &Tictactoe::returnToLobby, this, [=](){
+        stack->setCurrentIndex(LOBBY);
+    });
 
-    stack->show();}
+    connect(lobby_window, &Lobby::goToSetting, this, [=](){
+        stack->setCurrentIndex(SETTING);
+    });
+
+    connect(setting_window, &Setting::returnToLobby, this, [=](){
+        stack->setCurrentIndex(LOBBY);
+    });
+
+    stack->show();
+}
 
 MyGame::~MyGame() { }
