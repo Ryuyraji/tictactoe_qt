@@ -12,6 +12,9 @@ Lobby::Lobby(QWidget *parent)
     connect(lobby_ui->loginBtn, &QPushButton::clicked, this, [=](){
         emit goToLogin();
     });
+    // connect(lobby_ui->createAccountBtn, &QPushButton::clicked, this, [=](){
+        // emit goToLogin();
+    // });
     connect(lobby_ui->gameStartBtn, &QPushButton::clicked, this, [=](){
         emit playGame();
     });

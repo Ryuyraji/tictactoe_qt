@@ -9,14 +9,15 @@
 class QLineEdit;
 class QPushButton;
 
-class account : public QWidget
+class Account : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit account(QWidget *parent = nullptr);
-    ~account();
-
+    explicit Account(QWidget *parent = nullptr);
+    ~Account();
+signals:
+    void returnToLogin();
 private:
     QLineEdit *editId;
     QLineEdit *editPw;

@@ -29,6 +29,13 @@
      <height>61</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Login/Create an account&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
@@ -58,6 +65,13 @@ QPushButton:pressed{
      <width>271</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Play Tic Tac Toe!&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -89,6 +103,13 @@ QPushButton:pressed{
      <height>61</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Check your rank!&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
@@ -119,6 +140,13 @@ QPushButton:pressed{
      <height>61</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Adjust the background music!&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
@@ -148,6 +176,13 @@ QPushButton:pressed{
      <width>271</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Quit the game&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

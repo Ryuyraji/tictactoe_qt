@@ -10,20 +10,23 @@
 #include <QJsonArray>
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class login;
+class Login;
 }
 QT_END_NAMESPACE
 
-class login : public QWidget
+class Login : public QWidget
 {
     Q_OBJECT
 
 public:
-    login(QWidget *parent = nullptr);
-    ~login();
-
+    Login(QWidget *parent = nullptr);
+    ~Login();
 private:
-    Ui::login *loginui;
+    Ui::Login *login_ui;
+
+signals:
+    void goToCreateAccount();
+    void returnToLobby();
 
 private:
     void make_account();

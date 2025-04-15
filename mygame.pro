@@ -3,3 +3,5 @@
         mygame.ui \
         setting.ui\
         lobby.ui \
+        account.ui \ 
+        login.ui \

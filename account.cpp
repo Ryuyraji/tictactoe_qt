@@ -15,7 +15,7 @@
 #include <QString>
 #include <QRegularExpression>
 
-account::account(QWidget *parent)
+Account::Account(QWidget *parent)
     : QWidget(parent)
 {
     // 전체 레이아웃
@@ -47,7 +47,7 @@ account::account(QWidget *parent)
     createButton->setStyleSheet("color:black;padding: 6px; background-color: #cce0ff; border-radius: 8px;");
     mainLayout->addWidget(createButton);
 
-    QString inputFilePath = ("/Users/yj/veda_qt/user.json");
+    QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
     // JSON 파일 로딩
     QFile file(inputFilePath);
     if (file.open(QIODevice::ReadOnly)) {
@@ -92,20 +92,19 @@ account::account(QWidget *parent)
         n_jason["users"] = users1;
 
         QJsonDocument newDoc(n_jason);
-        QFile outFile("/Users/yj/veda_qt/user.json");
+        QFile outFile("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
         if (outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
             outFile.write(newDoc.toJson(QJsonDocument::Indented));
             outFile.close();
             QMessageBox::information(this, "성공", "계정이 추가되었습니다!");
+            emit returnToLogin();
         }
-
-
     });
 
 
 }
 
 
-account::~account() {}
+Account::~Account() {}
 
 
