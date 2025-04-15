@@ -208,8 +208,7 @@
    <property name="styleSheet">
     <string notr="true">background-image: url(:/img/tictactoe.png);
                     background-repeat: no-repeat;
-                    background-position: center;
-                    background-size: cover;</string>
+                    background-position: center;</string>
    </property>
    <property name="text">
     <string/>

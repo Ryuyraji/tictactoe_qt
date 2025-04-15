@@ -3,12 +3,11 @@
 
 #include <QWidget>
 #include <QJsonArray>
-#include "dbmanager.h"
 
 class QLineEdit;
 class QPushButton;
 
-class Account : public QWidget, protected DbManager
+class Account : public QWidget
 {
     Q_OBJECT
 

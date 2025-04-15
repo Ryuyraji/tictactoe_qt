@@ -1,37 +1,42 @@
 #include "dbmanager.h"
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
 
 DbManager::DbManager() {
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("./userDB.sqlite");
-    if (!m_db.open()){
-        qDebug() << "Error: connection with database failed";
-    }
-    else{
-        qDebug() << "Database: connection ok";
-    }
-    QString query = "CREATE TABLE IF NOT EXISTS userTable ("
-                    "id integer PRIMARY KEY AUTOINCREMENT,"
-                    "user_id VARCHAR(30),"
-                    "user_pw VARCHAR(30),"
-                    "user_nickname VARCHAR(30),"
-                    "winPoint int,"
-                    "lossPoint int);";
+    const QString connectionName = "MyGameDB";
+    setConnectionName(connectionName);
+    if (QSqlDatabase::contains(connectionName)) {
+        m_db = QSqlDatabase::database(connectionName);
+        if (!m_db.isOpen() && !m_db.open()) {
+            qDebug() << "Reused DB connection failed to open";
+        }
+    } else {
+        m_db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+        m_db.setDatabaseName("./userDB.sqlite");
+        if (!m_db.open()) {
+            qDebug() << "Error: connection with database failed";
+        } else {
+            qDebug() << "Database: connection ok!";
+        QString query =
+            "CREATE TABLE IF NOT EXISTS userTable ("
+            "id integer PRIMARY KEY AUTOINCREMENT,"
+            "user_id VARCHAR(30),"
+            "user_pw VARCHAR(30),"
+            "user_nickname VARCHAR(30),"
+            "winPoint int,"
+            "lossPoint int);";
 
-    QSqlQuery qry;
-    if(!qry.exec(query)){
-        qDebug() << "Creating the table failed\n";
-    }
-    else{
-        qDebug() << "successfully created!\n";
+        QSqlQuery qry(m_db);
+        if (!qry.exec(query)) {
+            qDebug() << "Creating the table failed:" << qry.lastError();
+        } else {
+            qDebug() << "Successfully created!";
+        }
+      }
     }
 }
-
 bool DbManager::addAccountInfo(const QString& id, const QString& pw, const QString& nickname){
     bool success = false;
 
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("INSERT INTO userTable (user_id, user_pw, user_nickname, winPoint, lossPoint) VALUES (:USER_ID, :USER_PW, :USER_NICKNAME, :WIN, :LOSS)");
     query.bindValue(":USER_ID", id);
     query.bindValue(":USER_PW", pw);
@@ -45,14 +50,14 @@ bool DbManager::addAccountInfo(const QString& id, const QString& pw, const QStri
     }
     else
     {
-        qDebug() << "addID error:" << query.lastError();
+        qDebug() << "addAccountInfo error:" << query.lastError();
     }
     return success;
 }
 
 bool DbManager::addWinPoint(const QString &id){
     bool success = false;
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("UPDATE userTable SET winPoint = winPoint + 1 WHERE user_id = :USER_ID");
     query.bindValue(":USER_ID", id);
     if(query.exec())
@@ -61,14 +66,14 @@ bool DbManager::addWinPoint(const QString &id){
     }
     else
     {
-        qDebug() << "addScore error:" << query.lastError();
+        qDebug() << "addWinPoint error:" << query.lastError();
     }
     return success;
 }
 
-bool DbManager::addLosePoint(const QString &id){
+bool DbManager::addLossPoint(const QString &id){
     bool success = false;
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("UPDATE userTable SET lossPoint = lossPoint + 1 WHERE user_id = :USER_ID");
     query.bindValue(":USER_ID", id);
     if(query.exec())
@@ -77,14 +82,14 @@ bool DbManager::addLosePoint(const QString &id){
     }
     else
     {
-        qDebug() << "addScore error:" << query.lastError();
+        qDebug() << "addLossPoint error:" << query.lastError();
     }
     return success;
 }
 
 bool DbManager::findAccountInfo(const QString& id, const QString& pw){
     bool success = false;
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("SELECT * FROM userTable WHERE user_id=:USER_ID and user_pw=:USER_PW");
     query.bindValue(":USER_ID", id);
     query.bindValue(":USER_PW", pw);
@@ -101,7 +106,7 @@ bool DbManager::findAccountInfo(const QString& id, const QString& pw){
 
 bool DbManager::findUserID(const QString& id){
     bool success = false;
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("SELECT * FROM userTable WHERE user_id=:USER_ID");
     query.bindValue(":USER_ID", id);
     if(query.exec()){
@@ -120,7 +125,7 @@ bool DbManager::findUserID(const QString& id){
 
 bool DbManager::findUserNickname(const QString& nickname){
     bool success = false;
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare("SELECT * FROM userTable WHERE user_nickname=:USER_NICKNAME");
     query.bindValue(":USER_NICKNAME", nickname);
     if(query.exec()){
@@ -137,4 +142,22 @@ bool DbManager::findUserNickname(const QString& nickname){
     return success;
 }
 
-DbManager::~DbManager() {}
+QString DbManager::getConnectionName() const{
+    return db_connectionName;
+}
+void DbManager::setConnectionName(const QString& custom_connection){
+    db_connectionName = custom_connection;
+}
+
+DbManager& DbManager::instance() {
+    static DbManager instance;
+    return instance;
+}
+
+QSqlDatabase& DbManager::getDatabase(){
+    return m_db;
+}
+
+DbManager::~DbManager() {
+    m_db.close();
+}

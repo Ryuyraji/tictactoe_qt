@@ -2,13 +2,19 @@
 #define LEADERBOARDS_H
 
 #include <QWidget>
-#include "dbmanager.h"
 
 namespace Ui {
 class leaderboards;
 }
 
-class Leaderboards : public QWidget, protected DbManager
+typedef struct {
+    int id;
+    QString nickname;
+    int win;
+    int loss;
+} Users;
+
+class Leaderboards : public QWidget
 {
     Q_OBJECT
 

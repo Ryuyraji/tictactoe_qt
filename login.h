@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QJsonArray>
-#include "dbmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -11,7 +10,7 @@ class Login;
 }
 QT_END_NAMESPACE
 
-class Login : public QWidget, protected DbManager
+class Login : public QWidget
 {
     Q_OBJECT
 

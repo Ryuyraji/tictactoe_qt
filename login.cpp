@@ -1,4 +1,5 @@
 #include "login.h"
+#include "dbmanager.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -76,7 +77,7 @@ Login::Login(QWidget *parent)
         QString inputPw = pwInput->text();
         bool loginSuccess = false;
 
-        if(findAccountInfo(inputId,inputPw)){
+        if(DbManager::instance().findAccountInfo(inputId,inputPw)){
             loginSuccess = true;
         }
 

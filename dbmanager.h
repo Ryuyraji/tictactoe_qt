@@ -3,20 +3,27 @@
 
 #include <QObject>
 #include <QtSql/QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 class DbManager
 {
 public:
-    DbManager();
+    QString getConnectionName() const;
+    void setConnectionName(const QString&);
     bool addAccountInfo(const QString&, const QString&, const QString&);
     bool addWinPoint(const QString&);
-    bool addLosePoint(const QString&);
+    bool addLossPoint(const QString&);
     bool findAccountInfo(const QString&, const QString&);
     bool findUserID(const QString&);
     bool findUserNickname(const QString&);
-    ~DbManager();
+    static DbManager& instance();
+    QSqlDatabase& getDatabase();
 private:
+    DbManager();
+    ~DbManager();
     QSqlDatabase m_db;
+    QString db_connectionName;
 };
 
 #endif // DBMANAGER_H

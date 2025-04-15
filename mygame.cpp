@@ -12,7 +12,6 @@
 MyGame::MyGame(QWidget *parent)
     : QWidget(parent)
 {
-    DbManager data_manager;
     this->setFixedSize(850, 850);
     stack = new QStackedWidget;
     // need QVBoxLayout to show the QStackedWidget

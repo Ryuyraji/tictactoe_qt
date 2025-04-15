@@ -1,4 +1,5 @@
 #include "account.h"
+#include "dbmanager.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -83,7 +84,7 @@ Account::Account(QWidget *parent)
 
             //이미 계정이 있는 경우
             QRegularExpression regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{6,}$");
-            if (findUserID(makeId)) {
+            if (DbManager::instance().findUserID(makeId)) {
                 QMessageBox::warning(this, "중복된 아이디", "이미 계정이 있습니다.");
             }
             //비밀번호 생성오류
@@ -97,7 +98,7 @@ Account::Account(QWidget *parent)
                     emit returnToLogin();
                     break;
                 }
-                if(findUserNickname(makeNickname) || makeNickname == ""){
+                if(DbManager::instance().findUserNickname(makeNickname) || makeNickname == ""){
                     QMessageBox::information(this, "Failed", "Cannot use this Nickname, Try again!");
                 }
                 else{
@@ -111,7 +112,7 @@ Account::Account(QWidget *parent)
 
         // }
             if(accountAvailable){
-                if(DbManager::addAccountInfo(makeId, makePw, makeNickname)){
+                if(DbManager::instance().addAccountInfo(makeId, makePw, makeNickname)){
                     QMessageBox::information(this, "성공", "계정이 추가되었습니다!");
                     emit returnToLogin();
                 }

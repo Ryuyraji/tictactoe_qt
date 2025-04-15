@@ -1,6 +1,6 @@
 #include "leaderboards.h"
 #include "ui_leaderboards.h"
-#include <QSqlQueryModel>
+#include "dbmanager.h"
 #include <QGraphicsDropShadowEffect>
 
 Leaderboards::Leaderboards(QWidget *parent)
@@ -14,17 +14,24 @@ Leaderboards::Leaderboards(QWidget *parent)
         emit returnToLobby();
     });
 
-    QSqlQueryModel query;
-    query.setQuery("SELECT * FROM userTable");
+    QSqlQuery query(DbManager::instance().getDatabase());
+    query.prepare("SELECT id, user_nickname, winPoint, lossPoint FROM userTable");
 
-    while (query.canFetchMore()){
-        query.fetchMore();
+    if (!query.exec()) {
+        qDebug() << "Query failed:" << query.lastError().text();
+        return;
     }
 
-    for (int i = 0; i < query.rowCount(); i++)
-    {
-        // Your data
+    QVector<Users *>account;
+    while (query.next()) {
+        Users *user = new Users;
+        user->id = query.value("id").toInt();
+        user->nickname = query.value("user_nickname").toString();
+        user->win = query.value("winPoint").toInt();
+        user->loss = query.value("lossPoint").toInt();
+        account.push_back(user);
     }
+
 }
 
 void Leaderboards::setTitleShadow(){
