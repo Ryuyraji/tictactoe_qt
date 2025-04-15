@@ -21,6 +21,7 @@ Account::Account(QWidget *parent)
     // 전체 레이아웃
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(20, 20, 20, 20);
+
     backBtn = new QPushButton(this);
     backBtn->setStyleSheet("QPushButton{"
                            "color:white;"
@@ -44,7 +45,7 @@ Account::Account(QWidget *parent)
     // 제목 라벨
     QLabel *titleLabel = new QLabel("계정 생성", this);
     titleLabel->setStyleSheet("color:black; font-size: 20px; font-weight: bold;");
-    titleLabel->setAlignment(Qt::AlignLeft);
+    titleLabel->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(titleLabel);
 
     // 아이디
@@ -64,7 +65,6 @@ Account::Account(QWidget *parent)
     createButton = new QPushButton("계정 생성", this);
     createButton->setStyleSheet("color:black;padding: 6px; background-color: #cce0ff; border-radius: 8px;");
     mainLayout->addWidget(createButton);
-
 
     QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
     // JSON 파일 로딩

@@ -6,11 +6,11 @@
 Setting::Setting(QWidget *parent) : QWidget(parent), setting_ui(new Ui::Form) {
     setting_ui->setupUi(this);
 
-    bgm_init();
-
     connect(setting_ui->backBtn, &QPushButton::clicked, this, [=](){
         emit returnToLobby();
     });
+
+    bgm_init();
 
     connect(setting_ui->musicState, &QPushButton::clicked, this, [=](){
         if(!music_on){

@@ -5,3 +5,4 @@
         lobby.ui \
         account.ui \ 
         login.ui \
+        tictactoe.ui \
