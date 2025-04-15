@@ -1,15 +1,14 @@
-#include <QJsonArray>
-
-
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
 #include <QWidget>
+#include <QJsonArray>
+#include "dbmanager.h"
 
 class QLineEdit;
 class QPushButton;
 
-class Account : public QWidget
+class Account : public QWidget, protected DbManager
 {
     Q_OBJECT
 

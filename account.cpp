@@ -1,19 +1,11 @@
 #include "account.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QFile>
-#include <QIODevice>
-#include <QByteArray>
-#include <QJsonArray>
 #include <QMessageBox>
-#include <QFileDialog>
 #include <QPushButton>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QString>
 #include <QRegularExpression>
+#include <QInputDialog>
 
 Account::Account(QWidget *parent)
     : QWidget(parent)
@@ -66,58 +58,80 @@ Account::Account(QWidget *parent)
     createButton->setStyleSheet("color:black;padding: 6px; background-color: #cce0ff; border-radius: 8px;");
     mainLayout->addWidget(createButton);
 
-    QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
-    // JSON 파일 로딩
-    QFile file(inputFilePath);
-    if (file.open(QIODevice::ReadOnly)) {
-        QString data = file.readAll();
-        file.close();
-        QJsonDocument doc1 = QJsonDocument::fromJson(data.toLocal8Bit());
-        QJsonObject Obj2 = doc1.object();
-        users1 = Obj2["users"].toArray();
-    }
+    // QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
+    // // JSON 파일 로딩
+    // QFile file(inputFilePath);
+    // if (file.open(QIODevice::ReadOnly)) {
+        // QString data = file.readAll();
+        // file.close();
+        // QJsonDocument doc1 = QJsonDocument::fromJson(data.toLocal8Bit());
+        // QJsonObject Obj2 = doc1.object();
+        // users1 = Obj2["users"].toArray();
+    // }
  //계정 버튼 누를떄
     connect(createButton, &QPushButton::clicked, this, [=]() {
         QString makeId = editId->text();
         QString makePw = editPw->text();
-        bool loginSuccess = false;
+        QString makeNickname = "";
+        bool accountAvailable = false;
+        bool nickName;
 
-        for (auto userVal : users1) {
-            QJsonObject user = userVal.toObject();
-            QString userId = user["id"].toString();
-            QString userPw = user["password"].toString();
+        // for (auto userVal : users1) {
+            // QJsonObject user = userVal.toObject();
+            // QString userId = user["id"].toString();
+            // QString userPw = user["password"].toString();
 
             //이미 계정이 있는 경우
-            if (editId->text() == userId) {
+            QRegularExpression regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{6,}$");
+            if (findUserID(makeId)) {
                 QMessageBox::warning(this, "중복된 아이디", "이미 계정이 있습니다.");
-                return;
             }
             //비밀번호 생성오류
-            QRegularExpression regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{6,}$");
-            if (!regex.match(makePw).hasMatch()) {
+            else if (!regex.match(makePw).hasMatch()) {
                 QMessageBox::warning(this, "비밀번호 오류", "비밀번호는 6자 이상이며, 영어/숫자/특수문자를 포함해야 합니다.");
-                return;
+            }
+            else{
+                while(1){
+                makeNickname = QInputDialog::getText(this, "NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
+                if(nickName == false){
+                    emit returnToLogin();
+                    break;
+                }
+                if(findUserNickname(makeNickname) || makeNickname == ""){
+                    QMessageBox::information(this, "Failed", "Cannot use this Nickname, Try again!");
+                }
+                else{
+                    accountAvailable = true;
+                    editId->clear();
+                    editPw->clear();
+                    break;
+                }
+                }
             }
 
-        }
+        // }
+            if(accountAvailable){
+                if(DbManager::addAccountInfo(makeId, makePw, makeNickname)){
+                    QMessageBox::information(this, "성공", "계정이 추가되었습니다!");
+                    emit returnToLogin();
+                }
+            }
         //새로운 정보 추가
-        QJsonObject newUser;
-        newUser["id"] = editId->text();
-        newUser["password"] = editPw->text();
-        users1.append(newUser);
+        // QJsonObject newUser;
+        // newUser["id"] = editId->text();
+        // newUser["password"] = editPw->text();
+        // users1.append(newUser);
 
         //다시 JSON 문서로 저장
-        QJsonObject n_jason;
-        n_jason["users"] = users1;
+        // QJsonObject n_jason;
+        // n_jason["users"] = users1;
 
-        QJsonDocument newDoc(n_jason);
-        QFile outFile("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
-        if (outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            outFile.write(newDoc.toJson(QJsonDocument::Indented));
-            outFile.close();
-            QMessageBox::information(this, "성공", "계정이 추가되었습니다!");
-            emit returnToLogin();
-        }
+        // QJsonDocument newDoc(n_jason);
+        // QFile outFile("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
+        // if (outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            // outFile.write(newDoc.toJson(QJsonDocument::Indented));
+            // outFile.close();
+        // }
     });
 
 

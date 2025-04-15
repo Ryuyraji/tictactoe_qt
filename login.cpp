@@ -1,15 +1,10 @@
 #include "login.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QFile>
-#include <QIODevice>
-#include <QByteArray>
-#include <QJsonArray>
 #include <QMessageBox>
-#include <QFileDialog>
 #include <QPushButton>
+#include <QInputDialog>
 
 Login::Login(QWidget *parent)
     : QWidget(parent)
@@ -19,6 +14,7 @@ Login::Login(QWidget *parent)
     mainLayout->setContentsMargins(20, 20, 20, 20);
     mainLayout->setSpacing(15);
 
+    //뒤로가기 버튼
     backBtn = new QPushButton(this);
     backBtn->setStyleSheet("QPushButton{"
                            "color:white;"
@@ -46,33 +42,29 @@ Login::Login(QWidget *parent)
     titleLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
     mainLayout->addWidget(titleLabel);
 
-
     // ID 입력창
-    idinput = new QLineEdit(this);
-    idinput->setPlaceholderText("ID");
-    idinput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
-    mainLayout->addWidget(idinput);
+    idInput = new QLineEdit(this);
+    idInput->setPlaceholderText("ID");
+    idInput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
+    mainLayout->addWidget(idInput);
 
     // Password 입력창
-    pwinput = new QLineEdit(this);
-    pwinput->setPlaceholderText("Password");
-    pwinput->setEchoMode(QLineEdit::Password);
-    pwinput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
-    mainLayout->addWidget(pwinput);
-    //뒤로가기 버튼
+    pwInput = new QLineEdit(this);
+    pwInput->setPlaceholderText("Password");
+    pwInput->setEchoMode(QLineEdit::Password);
+    pwInput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
+    mainLayout->addWidget(pwInput);
 
-
-
-    QString inputFilePath = ("../../../../../db/user.json");
-    // JSON 파일 로딩
-    QFile file(inputFilePath);
-    if (file.open(QIODevice::ReadOnly)) {
-        QString data = file.readAll();
-        file.close();
-        QJsonDocument doc = QJsonDocument::fromJson(data.toLocal8Bit());
-        QJsonObject Obj = doc.object();
-        users = Obj["users"].toArray();
-    }
+    // QString inputFilePath = ("../../../../../db/user.json");
+    // // JSON 파일 로딩
+    // QFile file(inputFilePath);
+    // if (file.open(QIODevice::ReadOnly)) {
+        // QString data = file.readAll();
+        // file.close();
+        // QJsonDocument doc = QJsonDocument::fromJson(data.toLocal8Bit());
+        // QJsonObject Obj = doc.object();
+        // users = Obj["users"].toArray();
+    // }
 
     // Sign in 버튼
     QPushButton *loginButton = new QPushButton("Sign in", this);
@@ -80,33 +72,41 @@ Login::Login(QWidget *parent)
     mainLayout->addWidget(loginButton);
 
     connect(loginButton, &QPushButton::clicked, this, [=]() {
-        QString inputId = idinput->text();
-        QString inputPw = pwinput->text();
+        QString inputId = idInput->text();
+        QString inputPw = pwInput->text();
         bool loginSuccess = false;
 
-        for (auto userVal : users) {
-            QJsonObject user = userVal.toObject();
-            QString userId = user["id"].toString();
-            QString userPw = user["password"].toString();
-            if (inputId == userId && inputPw == userPw) {
-                loginSuccess = true;
-                break;
-            }
+        if(findAccountInfo(inputId,inputPw)){
+            loginSuccess = true;
         }
+
+        // for (auto userVal : users) {
+            // QJsonObject user = userVal.toObject();
+            // QString userId = user["id"].toString();
+            // QString userPw = user["password"].toString();
+            // if (inputId == userId && inputPw == userPw) {
+                // loginSuccess = true;
+                // break;
+            // }
+        // }
 
         if (loginSuccess) {
             QMessageBox::information(this, "로그인 성공", "환영합니다");
+
+            idInput->clear();
+            pwInput->clear();
             emit returnToLobby();
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
         }
-
 });
 
     QPushButton *accountButton = new QPushButton("계정만들기", this);
     accountButton->setStyleSheet("color: blue;padding: 6px; background-color: #cce0ff; border: none; border-radius: 10px; font-weight: bold;");
     mainLayout->addWidget(accountButton);
     connect(accountButton, &QPushButton::clicked, this, [=](){
+        idInput->clear();
+        pwInput->clear();
         emit goToCreateAccount();
     });
 

@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia Sql)
 
 set(PROJECT_SOURCES main.cpp mygame.cpp mygame.h)
 
@@ -39,7 +39,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     tictactoe.h
     tictactoe.cpp
     waitingspinnerwidget.h
-    waitingspinnerwidget.cpp)
+    waitingspinnerwidget.cpp
+    dbmanager.h
+    dbmanager.cpp
+    leaderboards.h leaderboards.cpp leaderboards.ui)
   # Define target properties for Android with Qt 6 as: set_property(TARGET
   # veda_qt APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
   # ${CMAKE_CURRENT_SOURCE_DIR}/android) For more information, see
@@ -55,7 +58,7 @@ else()
 endif()
 
 target_link_libraries(veda_qt PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-                                      Qt${QT_VERSION_MAJOR}::Multimedia)
+                                      Qt${QT_VERSION_MAJOR}::Multimedia Qt${QT_VERSION_MAJOR}::Sql)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1. If
 # you are developing for iOS or macOS you should consider setting an explicit,

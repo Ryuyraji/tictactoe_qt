@@ -2,19 +2,16 @@
 #define LOGIN_H
 
 #include <QWidget>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QLabel>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QJsonArray>
+#include "dbmanager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Login;
 }
 QT_END_NAMESPACE
 
-class Login : public QWidget
+class Login : public QWidget, protected DbManager
 {
     Q_OBJECT
 
@@ -32,11 +29,11 @@ private:
     void make_account();
     void compare(); // id일치 불일치rememberCheck
 private:
-    QLineEdit *idinput;
-    QLineEdit *pwinput;
+    class QLineEdit *idInput;
+    class QLineEdit *pwInput;
     QByteArray data;
     QJsonArray users;
-    QPushButton *backBtn;
+    class QPushButton *backBtn;
 
 
 };

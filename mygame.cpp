@@ -4,6 +4,7 @@
 #include "login.h"
 #include "account.h"
 #include "tictactoe.h"
+#include "leaderboards.h"
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
@@ -11,7 +12,8 @@
 MyGame::MyGame(QWidget *parent)
     : QWidget(parent)
 {
-    this->setFixedSize(800, 800);
+    DbManager data_manager;
+    this->setFixedSize(850, 850);
     stack = new QStackedWidget;
     // need QVBoxLayout to show the QStackedWidget
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -31,7 +33,7 @@ MyGame::MyGame(QWidget *parent)
     Tictactoe *game_window = new Tictactoe;
     stack->addWidget(game_window);
 
-    QWidget *leaderboards_window = new QWidget;
+    Leaderboards *leaderboards_window = new Leaderboards;
     stack->addWidget(leaderboards_window);
 
     Setting *setting_window = new Setting;
@@ -62,6 +64,14 @@ MyGame::MyGame(QWidget *parent)
     });
 
     connect(game_window, &Tictactoe::returnToLobby, this, [=](){
+        stack->setCurrentIndex(LOBBY);
+    });
+
+    connect(lobby_window, &Lobby::goToLeaderboards, this, [=](){
+        stack->setCurrentIndex(LEADERBOARDS);
+    });
+
+    connect(leaderboards_window, &Leaderboards::returnToLobby, this, [=](){
         stack->setCurrentIndex(LOBBY);
     });
 
