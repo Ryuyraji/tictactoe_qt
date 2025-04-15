@@ -3,13 +3,7 @@
 
 #include <QWidget>
 
-enum WINDOWS { LOBBY, LOGIN, INGAME, LEADERBOARDS, SETTING };
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MyGame;
-}
-QT_END_NAMESPACE
+enum WINDOWS { LOBBY, LOGIN, CREATE_ACCOUNT, INGAME, LEADERBOARDS, SETTING };
 
 class MyGame : public QWidget
 {
@@ -20,7 +14,6 @@ public:
     ~MyGame();
 
 private:
-    Ui::MyGame *myGame_ui;
     class QStackedWidget *stack;
 };
 #endif // MYGAME_H

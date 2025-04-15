@@ -1,15 +1,10 @@
-#include "login.h"
-#include "account.h"
+#include "mygame.h"
 #include <QApplication>
-#include <QLabel>
-#include <QPixmap>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    login w;
-    //account v;
-    w.show();
-    //v.show();
+    MyGame g;
+    g.show();
     return a.exec();
 }

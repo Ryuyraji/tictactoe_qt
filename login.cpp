@@ -10,7 +10,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-login::login(QWidget *parent)
+Login::Login(QWidget *parent)
     : QWidget(parent)
 {
     // 전체 레이아웃
@@ -39,8 +39,7 @@ login::login(QWidget *parent)
     pwinput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
     mainLayout->addWidget(pwinput);
 
-
-    QString inputFilePath = ("/Users/yj/veda_qt/user.json");
+    QString inputFilePath = ("../../../../../db/user.json");
     // JSON 파일 로딩
     QFile file(inputFilePath);
     if (file.open(QIODevice::ReadOnly)) {
@@ -73,6 +72,7 @@ login::login(QWidget *parent)
 
         if (loginSuccess) {
             QMessageBox::information(this, "로그인 성공", "환영합니다");
+            emit returnToLobby();
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
         }
@@ -82,9 +82,12 @@ login::login(QWidget *parent)
     QPushButton *accountButton = new QPushButton("계정만들기", this);
     accountButton->setStyleSheet("color: blue;padding: 6px; background-color: #cce0ff; border: none; border-radius: 10px; font-weight: bold;");
     mainLayout->addWidget(accountButton);
+    connect(accountButton, &QPushButton::clicked, this, [=](){
+        emit goToCreateAccount();
+    });
 
 this->setLayout(mainLayout);
 }
 
 
-login::~login() {}
+Login::~Login() {}
