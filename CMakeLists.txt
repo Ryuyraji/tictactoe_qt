@@ -14,15 +14,20 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mygame.cpp
-        mygame.h
-        mygame.ui
+        login.cpp
+        login.h
+        login.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(veda_qt
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        user.json
+        account.h account.cpp account.ui
+
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET veda_qt APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
