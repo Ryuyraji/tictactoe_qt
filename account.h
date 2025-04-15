@@ -7,6 +7,13 @@
 class QLineEdit;
 class QPushButton;
 
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Account;
+}
+QT_END_NAMESPACE
+
+
 class Account : public QWidget
 {
     Q_OBJECT
@@ -14,14 +21,14 @@ class Account : public QWidget
 public:
     explicit Account(QWidget *parent = nullptr);
     ~Account();
+    void setTitleShadow();
 signals:
     void returnToLogin();
 private:
+    Ui::Account *account_ui;
     QLineEdit *editId;
     QLineEdit *editPw;
     QPushButton *createButton;
-    QJsonArray users1;
-    QPushButton *backBtn;
 
 };
 

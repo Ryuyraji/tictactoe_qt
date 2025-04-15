@@ -1,5 +1,6 @@
 #include "account.h"
 #include "dbmanager.h"
+#include "ui_account.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -7,80 +8,57 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QInputDialog>
+#include <QGraphicsDropShadowEffect>
 
 Account::Account(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), account_ui(new Ui::Account)
 {
+    account_ui->setupUi(this);
+    setTitleShadow();
+
     // 전체 레이아웃
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addStretch(1);
 
-    backBtn = new QPushButton(this);
-    backBtn->setStyleSheet("QPushButton{"
-                           "color:white;"
-                           "background-color: rgba(0,0,0,148);"
-                           "border:none;"
-                           "}"
-                           "QPushButton:hover{"
-                           "background-color: rgb(190,190,190);"
-                           "}"
-                           "QPushButton:pressed{"
-                           "background-color:rgb(170,170,170);"
-                           "}"
-                           );
-    backBtn->setFixedSize(41,41);
-    backBtn->move(30,30);
-    mainLayout->addWidget(backBtn);
-    connect(backBtn, &QPushButton::clicked, this, [=](){
+    QWidget *centerWidget = new QWidget(this);
+    QVBoxLayout *centerLayout = new QVBoxLayout(centerWidget);
+    centerLayout->setSpacing(15);
+    centerLayout->setAlignment(Qt::AlignCenter);
+
+    connect(account_ui->backBtn, &QPushButton::clicked, this, [=](){
         emit returnToLogin();
     });
 
-    // 제목 라벨
-    QLabel *titleLabel = new QLabel("계정 생성", this);
-    titleLabel->setStyleSheet("color:black; font-size: 20px; font-weight: bold;");
-    titleLabel->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(titleLabel);
-
     // 아이디
-    QLabel *labelId = new QLabel("아이디", this);
     editId = new QLineEdit(this);
-    mainLayout->addWidget(labelId);
-    mainLayout->addWidget(editId);
+    editId->setPlaceholderText("New ID");
+    editId->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
+    editId->setFixedSize(200,40);
+    mainLayout->addWidget(editId, 0, Qt::AlignCenter);
 
     // 비밀번호
-    QLabel *labelPw = new QLabel("비밀번호", this);
     editPw = new QLineEdit(this);
     editPw->setEchoMode(QLineEdit::Password);
-    mainLayout->addWidget(labelPw);
-    mainLayout->addWidget(editPw);
+    editPw->setPlaceholderText("New Password");
+    editPw->setStatusTip("at least 6 letters containing A-Z,a-z,!@#$%^&*()_+-=[];';:,./");
+    editPw->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
+    editPw->setFixedSize(200,40);
+    mainLayout->addWidget(editPw,0,Qt::AlignCenter);
 
     // 계정 생성 버튼
-    createButton = new QPushButton("계정 생성", this);
-    createButton->setStyleSheet("color:black;padding: 6px; background-color: #cce0ff; border-radius: 8px;");
-    mainLayout->addWidget(createButton);
+    createButton = new QPushButton("Create", this);
+    createButton->setStyleSheet("color: blue;padding: 6px; background-color: #cce0ff; border: none; border-radius: 10px; font-weight: bold;");
+    createButton->setFixedSize(200,40);
+    mainLayout->addWidget(createButton, 0, Qt::AlignCenter);
 
-    // QString inputFilePath = ("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
-    // // JSON 파일 로딩
-    // QFile file(inputFilePath);
-    // if (file.open(QIODevice::ReadOnly)) {
-        // QString data = file.readAll();
-        // file.close();
-        // QJsonDocument doc1 = QJsonDocument::fromJson(data.toLocal8Bit());
-        // QJsonObject Obj2 = doc1.object();
-        // users1 = Obj2["users"].toArray();
-    // }
- //계정 버튼 누를떄
+    //계정 버튼 누를떄
     connect(createButton, &QPushButton::clicked, this, [=]() {
         QString makeId = editId->text();
         QString makePw = editPw->text();
         QString makeNickname = "";
         bool accountAvailable = false;
         bool nickName;
-
-        // for (auto userVal : users1) {
-            // QJsonObject user = userVal.toObject();
-            // QString userId = user["id"].toString();
-            // QString userPw = user["password"].toString();
 
             //이미 계정이 있는 경우
             QRegularExpression regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{6,}$");
@@ -93,51 +71,40 @@ Account::Account(QWidget *parent)
             }
             else{
                 while(1){
-                makeNickname = QInputDialog::getText(this, "NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
-                if(nickName == false){
-                    emit returnToLogin();
-                    break;
-                }
-                if(DbManager::instance().findUserNickname(makeNickname) || makeNickname == ""){
-                    QMessageBox::information(this, "Failed", "Cannot use this Nickname, Try again!");
-                }
-                else{
-                    accountAvailable = true;
-                    editId->clear();
-                    editPw->clear();
-                    break;
-                }
+                    makeNickname = QInputDialog::getText(this, "NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
+                    if(nickName == false){
+                        emit returnToLogin();
+                        break;
+                    }
+                    if(DbManager::instance().findUserNickname(makeNickname) || makeNickname == ""){
+                        QMessageBox::information(this, "Failed", "Cannot use this Nickname, Try again!");
+                    }
+                    else{
+                        accountAvailable = true;
+                        editId->clear();
+                        editPw->clear();
+                        break;
+                    }
                 }
             }
-
-        // }
             if(accountAvailable){
                 if(DbManager::instance().addAccountInfo(makeId, makePw, makeNickname)){
                     QMessageBox::information(this, "성공", "계정이 추가되었습니다!");
                     emit returnToLogin();
                 }
             }
-        //새로운 정보 추가
-        // QJsonObject newUser;
-        // newUser["id"] = editId->text();
-        // newUser["password"] = editPw->text();
-        // users1.append(newUser);
-
-        //다시 JSON 문서로 저장
-        // QJsonObject n_jason;
-        // n_jason["users"] = users1;
-
-        // QJsonDocument newDoc(n_jason);
-        // QFile outFile("/Users/yeseongmoon/QtExample/veda_qt/db/user.json");
-        // if (outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            // outFile.write(newDoc.toJson(QJsonDocument::Indented));
-            // outFile.close();
-        // }
     });
-
-
+    mainLayout->addWidget(centerWidget);
+    mainLayout->addStretch(1);
 }
 
+void Account::setTitleShadow(){
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(12);
+    shadow->setColor(QColor(0, 0, 0, 200));
+    shadow->setOffset(7, 7);
+    account_ui->title->setGraphicsEffect(shadow);
+}
 
 Account::~Account() {}
 

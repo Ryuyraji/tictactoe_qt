@@ -105,10 +105,10 @@ QSlider::add-page:horizontal {
    </property>
    <property name="font">
     <font>
-     <family>13 Klee</family>
-     <pointsize>25</pointsize>
+     <family>Klee</family>
+     <pointsize>20</pointsize>
      <italic>false</italic>
-     <bold>false</bold>
+     <bold>true</bold>
     </font>
    </property>
    <property name="layoutDirection">

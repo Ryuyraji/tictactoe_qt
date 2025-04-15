@@ -19,6 +19,7 @@ public:
     ~Login();
     void make_account();
     void compare(); // id일치 불일치rememberCheck
+    void setTitleShadow();
 
 signals:
     void goToCreateAccount();

@@ -1,76 +1,54 @@
 #include "login.h"
 #include "dbmanager.h"
+#include "ui_login.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QInputDialog>
+#include <QGraphicsDropShadowEffect>
 
 Login::Login(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), login_ui(new Ui::Login)
 {
+    login_ui->setupUi(this);
+    setTitleShadow();
     // 전체 레이아웃
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setContentsMargins(20, 20, 20, 20);
-    mainLayout->setSpacing(15);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addStretch(1);
 
-    //뒤로가기 버튼
-    backBtn = new QPushButton(this);
-    backBtn->setStyleSheet("QPushButton{"
-                           "color:white;"
-                           "background-color: rgba(0,0,0,148);"
-                           "border:none;"
-                           "}"
-                           "QPushButton:hover{"
-                           "background-color: rgb(190,190,190);"
-                           "}"
-                           "QPushButton:pressed{"
-                           "background-color:rgb(170,170,170);"
-                           "}"
-                           );
-    backBtn->setFixedSize(41,41);
-    backBtn->move(30,30);
-    mainLayout->addWidget(backBtn);
-    connect(backBtn, &QPushButton::clicked, this, [=](){
+    // Centered widget container
+    QWidget *centerWidget = new QWidget(this);
+    QVBoxLayout *centerLayout = new QVBoxLayout(centerWidget);
+    centerLayout->setSpacing(15);
+    centerLayout->setAlignment(Qt::AlignCenter);
+
+    connect(login_ui->backBtn, &QPushButton::clicked, this, [=](){
         emit returnToLobby();
     });
-
-    // "로그인" 텍스트
-    QLabel *titleLabel = new QLabel("로그인");
-    titleLabel->setStyleSheet("color:black;font-size: 20px; font-weight: bold;");
-    titleLabel->setAlignment(Qt::AlignCenter);
-    titleLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
-    mainLayout->addWidget(titleLabel);
 
     // ID 입력창
     idInput = new QLineEdit(this);
     idInput->setPlaceholderText("ID");
     idInput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
-    mainLayout->addWidget(idInput);
+    idInput->setFixedSize(200,40);
+    mainLayout->addWidget(idInput, 0, Qt::AlignCenter);
 
     // Password 입력창
     pwInput = new QLineEdit(this);
     pwInput->setPlaceholderText("Password");
     pwInput->setEchoMode(QLineEdit::Password);
     pwInput->setStyleSheet("color:black;padding: 10px; border-radius: 10px; background-color: #f0f0f0; border: none;");
-    mainLayout->addWidget(pwInput);
-
-    // QString inputFilePath = ("../../../../../db/user.json");
-    // // JSON 파일 로딩
-    // QFile file(inputFilePath);
-    // if (file.open(QIODevice::ReadOnly)) {
-        // QString data = file.readAll();
-        // file.close();
-        // QJsonDocument doc = QJsonDocument::fromJson(data.toLocal8Bit());
-        // QJsonObject Obj = doc.object();
-        // users = Obj["users"].toArray();
-    // }
+    pwInput->setFixedSize(200,40);
+    mainLayout->addWidget(pwInput, 0, Qt::AlignCenter);
 
     // Sign in 버튼
     QPushButton *loginButton = new QPushButton("Sign in", this);
     loginButton->setStyleSheet("color: blue;padding: 6px; background-color: #cce0ff; border: none; border-radius: 10px; font-weight: bold;");
-    mainLayout->addWidget(loginButton);
+    loginButton->setFixedSize(200,40);
+    mainLayout->addWidget(loginButton, 0, Qt::AlignCenter);
 
     connect(loginButton, &QPushButton::clicked, this, [=]() {
         QString inputId = idInput->text();
@@ -80,17 +58,6 @@ Login::Login(QWidget *parent)
         if(DbManager::instance().findAccountInfo(inputId,inputPw)){
             loginSuccess = true;
         }
-
-        // for (auto userVal : users) {
-            // QJsonObject user = userVal.toObject();
-            // QString userId = user["id"].toString();
-            // QString userPw = user["password"].toString();
-            // if (inputId == userId && inputPw == userPw) {
-                // loginSuccess = true;
-                // break;
-            // }
-        // }
-
         if (loginSuccess) {
             QMessageBox::information(this, "로그인 성공", "환영합니다 " + inputId +"님!");
             user_id = inputId;
@@ -100,19 +67,28 @@ Login::Login(QWidget *parent)
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
         }
-});
+    });
 
-    QPushButton *accountButton = new QPushButton("계정만들기", this);
+    QPushButton *accountButton = new QPushButton("Create an account", this);
     accountButton->setStyleSheet("color: blue;padding: 6px; background-color: #cce0ff; border: none; border-radius: 10px; font-weight: bold;");
-    mainLayout->addWidget(accountButton);
+    accountButton->setFixedSize(200,40);
+    mainLayout->addWidget(accountButton, 0, Qt::AlignCenter);
     connect(accountButton, &QPushButton::clicked, this, [=](){
         idInput->clear();
         pwInput->clear();
         emit goToCreateAccount();
     });
 
-this->setLayout(mainLayout);
+    mainLayout->addWidget(centerWidget);
+    mainLayout->addStretch(1);
 }
 
+void Login::setTitleShadow(){
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(12);
+    shadow->setColor(QColor(0, 0, 0, 200));
+    shadow->setOffset(7, 7);
+    login_ui->title->setGraphicsEffect(shadow);
+}
 
 Login::~Login() {}
