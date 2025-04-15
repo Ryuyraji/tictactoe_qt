@@ -1,6 +1,7 @@
 #include "login.h"
 #include "dbmanager.h"
 #include "ui_login.h"
+#include "lobby.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -9,8 +10,8 @@
 #include <QInputDialog>
 #include <QGraphicsDropShadowEffect>
 
-Login::Login(QWidget *parent)
-    : QWidget(parent), login_ui(new Ui::Login)
+Login::Login(Lobby *lobby, QWidget *parent)
+    : m_lobby(lobby), QWidget(parent), login_ui(new Ui::Login)
 {
     login_ui->setupUi(this);
     setTitleShadow();
@@ -63,6 +64,8 @@ Login::Login(QWidget *parent)
             user_id = inputId;
             idInput->clear();
             pwInput->clear();
+            m_lobby->getButton()->setText("My Account");
+            m_lobby->setAccessibleName("MyAccount");
             emit returnToLobby();
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
@@ -90,5 +93,4 @@ void Login::setTitleShadow(){
     shadow->setOffset(7, 7);
     login_ui->title->setGraphicsEffect(shadow);
 }
-
 Login::~Login() {}

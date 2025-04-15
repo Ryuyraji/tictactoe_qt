@@ -15,6 +15,7 @@ Leaderboards::Leaderboards(QWidget *parent)
     QFont font("Klee");
     font.setPointSize(25);
     leaderboard_ui->leaderboard->setFont(font);
+    leaderboard_ui->searchBar->setPlaceholderText("Enter a nickname");
 
     connect(leaderboard_ui->backBtn, &QPushButton::clicked, this, [=](){
         emit returnToLobby();

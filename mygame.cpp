@@ -23,7 +23,7 @@ MyGame::MyGame(QWidget *parent)
     Lobby *lobby_window = new Lobby;
     stack->addWidget(lobby_window);
 
-    Login *login_window = new Login;
+    Login *login_window = new Login(lobby_window);
     stack->addWidget(login_window);
 
     Account *create_account_window = new Account;
@@ -46,7 +46,7 @@ MyGame::MyGame(QWidget *parent)
         stack->setCurrentIndex(LOGIN);
     });
 
-    connect(login_window, &Login::returnToLobby, this, [=](){
+    connect(login_window, &Login::returnToLobby, this, [&](){
         stack->setCurrentIndex(LOBBY);
     });
 

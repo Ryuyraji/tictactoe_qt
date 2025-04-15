@@ -13,6 +13,7 @@ class Lobby : public QWidget
 
 public:
     explicit Lobby(QWidget *parent = nullptr);
+    class QPushButton *getButton();
     void setTitleShadow();
     ~Lobby();
 signals:

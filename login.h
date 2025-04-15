@@ -2,7 +2,7 @@
 #define LOGIN_H
 
 #include <QWidget>
-#include <QJsonArray>
+#include "lobby.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -15,7 +15,7 @@ class Login : public QWidget
     Q_OBJECT
 
 public:
-    Login(QWidget *parent = nullptr);
+    Login(Lobby *lobby, QWidget *parent = nullptr);
     ~Login();
     void make_account();
     void compare(); // id일치 불일치rememberCheck
@@ -24,14 +24,13 @@ public:
 signals:
     void goToCreateAccount();
     void returnToLobby();
+    void loginSucceed();
 
 private:
+    Lobby *m_lobby;
     Ui::Login *login_ui;
     QString user_id;
     class QLineEdit *idInput;
     class QLineEdit *pwInput;
-    QByteArray data;
-    QJsonArray users;
-    class QPushButton *backBtn;
 };
 #endif // LOGIN_H

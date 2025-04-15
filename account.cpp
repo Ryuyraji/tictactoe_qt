@@ -73,6 +73,8 @@ Account::Account(QWidget *parent)
                 while(1){
                     makeNickname = QInputDialog::getText(this, "NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
                     if(nickName == false){
+                        editId->clear();
+                        editPw->clear();
                         emit returnToLogin();
                         break;
                     }

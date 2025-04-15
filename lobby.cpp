@@ -33,6 +33,11 @@ void Lobby::setTitleShadow(){
     shadow->setOffset(7, 7);                 // offset (x, y)
     lobby_ui->title->setGraphicsEffect(shadow);
 }
+
+QPushButton *Lobby::getButton(){
+    return lobby_ui->loginBtn;
+}
+
 Lobby::~Lobby()
 {
     delete lobby_ui;
