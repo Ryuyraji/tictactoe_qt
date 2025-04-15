@@ -1,0 +1,28 @@
+{
+    "users": [
+        {
+            "id": "RYU",
+            "password": "1234"
+        },
+        {
+            "id": "kim456",
+            "password": "abcd"
+        },
+        {
+            "id": "lee789",
+            "password": "qwerty"
+        },
+        {
+            "id": "sdlkfj",
+            "password": "sdf"
+        },
+        {
+            "id": "dsakfj",
+            "password": "@sldkfj123"
+        },
+        {
+            "id": "sfjla",
+            "password": "jkl7!ghg"
+        }
+    ]
+}
