@@ -1,8 +1,13 @@
+
 #include "mypage.h"
 #include "ui_mypage.h"
 #include "dbmanager.h"
-#include <QPushButton>
 #include <QMessageBox>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QInputDialog>
 
 MyPage::MyPage(QWidget *parent)
     : QWidget(parent)
@@ -10,53 +15,71 @@ MyPage::MyPage(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // QSqlQuery query(DbManager::instance().getDatabase());
-    // query.prepare("SELECT user_id, user_nickname, winPoint, lossPoint, FROM userTable");
-    // if(!query.exec()){
-    //     qDebug() << "Query failed\n";
-    //     return;
-    // }
+    // 로그인 시 가져온 사용자 ID (로그인 후 저장된 userId)
+    userId = "logged_in_user_id";  // 실제로는 로그인 후 `userId`를 설정해야 합니다.
 
-    // while(query.next()){
-    //     QString userId = query.value("user_id").toString();
-    //     QString userNickname = query.value("user_nickname").toString();
-    //     int win = query.value("winPoint").toInt();
-    //     int loss = query.value("lossPoint").toInt();
-    // }
+    // 내 정보 가져오기
+    fetchUserInfo();
 
-    connect(ui->updateBtn, &QPushButton::clicked, this, &MyPage::updateNickname);
-    connect(ui->deleteBtn, &QPushButton::clicked, this, &MyPage::removeAccount);
+    // 닉네임 수정 버튼 연결
+    connect(ui->updateBtn, &QPushButton::clicked, this, [=]() {
+        // 새 닉네임을 QInputDialog로 입력 받기
+        bool ok;
+        QString newNickname = QInputDialog::getText(this, "New NickName?", "Enter new nickname:", QLineEdit::Normal, "", &ok);
+
+        if (ok && !newNickname.isEmpty()) {
+            // 새 닉네임이 비어있지 않고, 입력이 성공적일 경우
+            if (DbManager::instance().updateNickname(newNickname, userId)) {
+                // 수정된 닉네임을 UI에 표시
+                ui->nicknameEdit->setText(newNickname);
+                QMessageBox::information(this, "닉네임 수정", "닉네임이 성공적으로 수정되었습니다.");
+            } else {
+                QMessageBox::critical(this, "닉네임 수정", "닉네임 수정에 실패했습니다.");
+            }
+        } else if (ok) {
+            // 사용자가 닉네임을 입력하지 않고 취소한 경우
+            QMessageBox::warning(this, "닉네임 수정", "닉네임을 입력하지 않았습니다.");
+        }
+    });
+
+    // 계정 삭제 버튼 연결
+    connect(ui->deleteBtn, &QPushButton::clicked, this, [=]() {
+        // 계정 삭제 확인
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "계정 삭제", "정말로 계정을 삭제하시겠습니까?", QMessageBox::Yes | QMessageBox::No);
+
+        if (reply == QMessageBox::Yes) {
+            // 계정 삭제
+            if (DbManager::instance().removeAccount(userId)) {
+                QMessageBox::information(this, "삭제 완료", "계정이 삭제되었습니다.");
+                // 삭제 후 로그인 화면 등으로 이동하는 로직을 추가할 수 있습니다.
+            } else {
+                QMessageBox::critical(this, "계정 삭제", "계정 삭제에 실패했습니다.");
+            }
+        }
+    });
+}
+
+MyPage::~MyPage()
+{
+    delete ui;
 }
 
 
 
-void MyPage::updateNickname(){
+// 닉네임 수정
+void MyPage::updateNickname() {
+
+    connect(ui->updateBtn_2, &QPushbutton::clicked, this, [=](){
+                    newNickname = QInputDialog::getText(this, "New NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
+});
 
 
-    QString newNickname = ui->nicknameEdit->text();
 
-    if (newNickname.isEmpty()) {
-        QMessageBox::warning(this, "닉네임 수정", "닉네임을 입력해주세요.");
-        return;
-    }
-
-    // 데이터베이스에 닉네임 수정
-    QSqlQuery query(DbManager::instance().getDatabase());
-    query.prepare("UPDATE userTable SET user_nickname = :nickname WHERE user_id = :user_id");
-    query.bindValue(":nickname", newNickname);
-    query.bindValue(":user_id", userId);  // 로그인한 사용자의 ID로 업데이트
-
-    if (!query.exec()) {
-        qDebug() << "Update failed: " << query.lastError().text();
-        QMessageBox::critical(this, "닉네임 수정", "닉네임 수정에 실패했습니다.");
-        return;
-    }
-
-    QMessageBox::information(this, "닉네임 수정", "닉네임이 수정되었습니다.");
-    newNickname = newNickname;
 }
 
 
+// 계정 삭제
 void MyPage::removeAccount() {
     // 계정 삭제 확인
     QMessageBox::StandardButton reply;
@@ -67,10 +90,9 @@ void MyPage::removeAccount() {
         // 데이터베이스에서 계정 삭제
         QSqlQuery query(DbManager::instance().getDatabase());
         query.prepare("DELETE FROM userTable WHERE user_id = :user_id");
-        query.bindValue(":user_id", "user_id_value");  // 실제 사용자의 ID 값으로 교체해야 함
+        query.bindValue(":user_id", userId);  // 로그인한 사용자의 ID
 
         if (!query.exec()) {
-            // 삭제 실패 시 오류 처리
             qDebug() << "Delete failed: " << query.lastError().text();
             QMessageBox::critical(this, "계정 삭제", "계정 삭제에 실패했습니다.");
             return;
@@ -79,11 +101,7 @@ void MyPage::removeAccount() {
         // 삭제 완료 시 사용자에게 알림
         QMessageBox::information(this, "삭제 완료", "계정이 삭제되었습니다.");
 
-
+        // 삭제 후 처리
+        // emit accountDeleted();  // 계정 삭제 후 로비 화면으로 돌아가기 등
     }
-}
-
-MyPage::~MyPage()
-{
-    delete ui;
 }

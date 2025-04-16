@@ -22,6 +22,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     veda_qt
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
+    mypage.h
+    mypage.cpp
+    mypage.ui
     setting.h
     setting.cpp
     setting.ui
@@ -42,7 +45,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     waitingspinnerwidget.cpp
     dbmanager.h
     dbmanager.cpp
-    leaderboards.h leaderboards.cpp leaderboards.ui)
+    leaderboards.h leaderboards.cpp leaderboards.ui
+  )
   # Define target properties for Android with Qt 6 as: set_property(TARGET
   # veda_qt APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
   # ${CMAKE_CURRENT_SOURCE_DIR}/android) For more information, see

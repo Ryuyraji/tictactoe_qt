@@ -19,6 +19,9 @@ public:
     bool findUserNickname(const QString&);
     static DbManager& instance();
     QSqlDatabase& getDatabase();
+    QStringList fetchUserInfo(const QString&, const QString&, const QString&);//정보 가져오기
+    bool updateNickname(const QString&,const QString&);
+    bool removeAccount(const QString&, const QString&, const QString&);
 private:
     DbManager();
     ~DbManager();

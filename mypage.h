@@ -1,10 +1,9 @@
 #ifndef MYPAGE_H
 #define MYPAGE_H
 
-#include <QString>
 #include <QWidget>
-#include <QLineEdit>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 
 namespace Ui {
@@ -12,7 +11,6 @@ class MyPage;
 }
 
 class MyPage : public QWidget
-
 {
     Q_OBJECT
 
@@ -20,23 +18,17 @@ public:
     explicit MyPage(QWidget *parent = nullptr);
     ~MyPage();
 
-private:
-    Ui::MyPage *ui;
 private slots:
-
     void updateNickname();
     void removeAccount();
 
 private:
-    QString userId;
-    QLabel *winLabel;
-    QLabel *loseLabel;
-    QPushButton *deleteBtn;
-    QPushButton *updateBtn;
-    QLabel *nicknameEdit;
-
-
+    Ui::MyPage *ui;
+    QString userId;  // 로그인한 사용자의 ID
+    QString userNickname;  // 로그인한 사용자의 닉네임
+    void fetchUserInfo();  // 데이터베이스에서 내 정보 가져오기
+    QString newNickname;
+    QPushButton updateBtn;
 };
-
 
 #endif // MYPAGE_H
