@@ -4,6 +4,7 @@
 #include "login.h"
 #include "account.h"
 #include "tictactoe.h"
+#include "mypage.h"
 #include "leaderboards.h"
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -29,7 +30,7 @@ MyGame::MyGame(QWidget *parent)
     Account *create_account_window = new Account;
     stack->addWidget(create_account_window);
 
-    QWidget *myPage_window = new QWidget;
+    MyPage *myPage_window = new MyPage;
     stack->addWidget(myPage_window);
 
     Tictactoe *game_window = new Tictactoe;

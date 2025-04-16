@@ -1,6 +1,7 @@
 
 #include "mypage.h"
 #include "ui_mypage.h"
+#include "login.h"
 #include "dbmanager.h"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -16,10 +17,12 @@ MyPage::MyPage(QWidget *parent)
     ui->setupUi(this);
 
     // 로그인 시 가져온 사용자 ID (로그인 후 저장된 userId)
-    userId = "logged_in_user_id";  // 실제로는 로그인 후 `userId`를 설정해야 합니다.
+    connect(&Login::instance(), &Login::loginSucceed, this, [&](QString userInfo){
+        userId = userInfo;
+    });
 
     // 내 정보 가져오기
-    fetchUserInfo();
+    DbManager::instance().fetchUserInfo();
 
     // 닉네임 수정 버튼 연결
     connect(ui->updateBtn, &QPushButton::clicked, this, [=]() {
@@ -31,7 +34,7 @@ MyPage::MyPage(QWidget *parent)
             // 새 닉네임이 비어있지 않고, 입력이 성공적일 경우
             if (DbManager::instance().updateNickname(newNickname, userId)) {
                 // 수정된 닉네임을 UI에 표시
-                ui->nicknameEdit->setText(newNickname);
+                ui->nickname->setText(newNickname);
                 QMessageBox::information(this, "닉네임 수정", "닉네임이 성공적으로 수정되었습니다.");
             } else {
                 QMessageBox::critical(this, "닉네임 수정", "닉네임 수정에 실패했습니다.");
@@ -63,19 +66,6 @@ MyPage::MyPage(QWidget *parent)
 MyPage::~MyPage()
 {
     delete ui;
-}
-
-
-
-// 닉네임 수정
-void MyPage::updateNickname() {
-
-    connect(ui->updateBtn_2, &QPushbutton::clicked, this, [=](){
-                    newNickname = QInputDialog::getText(this, "New NickName?", "Enter any nickname!", QLineEdit::Normal, "", &nickName);
-});
-
-
-
 }
 
 
