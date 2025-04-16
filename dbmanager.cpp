@@ -173,26 +173,24 @@ QSqlDatabase& DbManager::getDatabase(){
     return m_db;
 }
 
-QStringList DbManager::fetchUserInfo(const QString& id, const QString& pw, const QString& nickname) {
+QStringList DbManager::fetchUserInfo() {
     QStringList userInfo;  // 반환할 데이터를 저장할 리스트
 
     QSqlQuery query(m_db);
-    query.prepare("SELECT user_id, user_nickname, winPoint, lossPoint FROM userTable WHERE user_id = :user_id");
-    query.bindValue(":user_id", id);  // 로그인한 사용자 ID를 바인딩
+    query.prepare("SELECT id, user_id, user_nickname, winPoint, lossPoint FROM userTable");
 
     if (!query.exec()) {
         qDebug() << "Query failed: " << query.lastError().text();
         return userInfo;  // 실패한 경우 빈 리스트 반환
     }
 
-    if (query.next()) {
+    while (query.next()) {
         // 쿼리 결과에서 값 추출하여 리스트에 저장
+        userInfo << QString::number(query.value("id").toInt());
         userInfo << query.value("user_id").toString();
         userInfo << query.value("user_nickname").toString();
         userInfo << query.value("winPoint").toString();
         userInfo << query.value("lossPoint").toString();
-    } else {
-        qDebug() << "No information found for user: " << id;
     }
 
     return userInfo;  // 값을 담은 리스트 반환
@@ -221,7 +219,7 @@ bool DbManager::updateNickname(const QString& nickname, const QString& id) {
 
 
 
-bool DbManager::removeAccount(const QString& id, const QString& pw, const QString& nickname) {
+bool DbManager::removeAccount(const QString& id) {
         // 사용자에게 계정 삭제 여부 확인
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(nullptr, "계정 삭제", "정말로 계정을 삭제하시겠습니까?",

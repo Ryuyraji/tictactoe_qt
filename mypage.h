@@ -19,14 +19,12 @@ public:
     ~MyPage();
 
 private slots:
-    void updateNickname();
     void removeAccount();
 
 private:
     Ui::MyPage *ui;
     QString userId;  // 로그인한 사용자의 ID
     QString userNickname;  // 로그인한 사용자의 닉네임
-    void fetchUserInfo();  // 데이터베이스에서 내 정보 가져오기
     QString newNickname;
     QPushButton updateBtn;
 };

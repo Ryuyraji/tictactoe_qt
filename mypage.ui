@@ -175,7 +175,7 @@
     <string>nickname</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="updateBtn_2">
+  <widget class="QPushButton" name="updateBtn">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -196,7 +196,7 @@
   <zorder>winPointLabel</zorder>
   <zorder>lossPointLabel</zorder>
   <zorder>nickname</zorder>
-  <zorder>updateBtn_2</zorder>
+  <zorder>updateBtn</zorder>
  </widget>
  <resources/>
  <connections/>
