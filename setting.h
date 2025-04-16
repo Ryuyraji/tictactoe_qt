@@ -14,6 +14,7 @@ class Setting : public QWidget
 public:
     Setting(QWidget *parent = nullptr);
     void bgm_init();
+    void setTitleShadow();
     ~Setting();
 signals:
     void returnToLobby();

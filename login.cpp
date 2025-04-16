@@ -1,7 +1,6 @@
 #include "login.h"
 #include "dbmanager.h"
 #include "ui_login.h"
-#include "lobby.h"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -10,10 +9,9 @@
 #include <QInputDialog>
 #include <QGraphicsDropShadowEffect>
 
-Login::Login(QWidget *parent){}
 
-Login::Login(Lobby *lobby, QWidget *parent)
-    : m_lobby(lobby), QWidget(parent), login_ui(new Ui::Login)
+Login::Login(QWidget *parent)
+    : QWidget(parent), login_ui(new Ui::Login)
 {
     login_ui->setupUi(this);
     setTitleShadow();
@@ -63,14 +61,14 @@ Login::Login(Lobby *lobby, QWidget *parent)
             loginSuccess = true;
         }
         if (loginSuccess) {
-            QMessageBox::information(this, "로그인 성공", "환영합니다 " + inputId +"님!");
+            QString nickname = DbManager::instance().retrieveUserNickname(inputId);
+            QMessageBox::information(this, "로그인 성공", "환영합니다 " + nickname +"님!");
             user_id = inputId;
             idInput->clear();
             pwInput->clear();
-            m_lobby->getButton()->setText("My Account");
             loginState = true;
             Login::instance().emit loginSucceed(user_id);
-            emit returnToLobby();
+            emit login();
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
         }
@@ -102,13 +100,13 @@ bool Login::getLoginState(){
     return loginState;
 }
 
+void Login::setLoginState(bool state){
+    loginState = state;
+}
+
 Login& Login::instance() {
     static Login _instance;
     return _instance;
-}
-
-QString Login::currentUser() const {
-    return user_id;
 }
 
 Login::~Login() {}

@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QColor>
 #include <QFrame>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 Tictactoe::Tictactoe(QWidget *parent)
     : QWidget(parent) , game_ui(new Ui::tictactoe_ui)
@@ -14,13 +16,14 @@ Tictactoe::Tictactoe(QWidget *parent)
     game_ui->setupUi(this);
 
     currentUser = "";
+
     setSpinner();
     startGame();
 
     connect(&Login::instance(), &Login::loginSucceed, this, [&](QString userInfo){
-        currentUser = userInfo;
-        QString userNickname = DbManager::instance().retrieveUserNickname(userInfo);
-        game_ui->label_2->setText("Current Player: " + userNickname);
+        currentUserId = userInfo;
+        currentUser = DbManager::instance().retrieveUserNickname(userInfo);
+        game_ui->label_2->setText("Current Player: " + currentUser);
     });
 
     connect(game_ui->backBtn, &QPushButton::clicked, this, [=](){
@@ -42,18 +45,19 @@ Tictactoe::Tictactoe(QWidget *parent)
             // Set font and text
             QFont font = btn->font();
             font.setFamily("Klee");
-            font.setPixelSize(200);  // 60% of button size, adjust as needed
+            font.setPixelSize(200);
             btn->setFont(font);
 
             QString symbol;
             if(whichPlayer == 0){
                 symbol= "X";
-                game_ui->label_2->setText("Current Player: A.I.");
+                game_ui->label_2->setText("Current Player: Computer");
                 btn->setText(symbol);
                 btn->setStyleSheet("QPushButton{"
                                    "border: red;"
                                    "color: red;"
                                    "}");
+                soundEffect();
             }
             else{
                 symbol = "O";
@@ -63,6 +67,7 @@ Tictactoe::Tictactoe(QWidget *parent)
                                    "border: blue;"
                                    "color: blue;"
                                    "}");
+                soundEffect();
             }
 
             whichPlayer = 1 - whichPlayer;
@@ -77,24 +82,46 @@ Tictactoe::Tictactoe(QWidget *parent)
             QString winner = checkWinner(board).first;
             std::pair<QString, QString> coordinate = checkWinner(board).second;
             if(!winner.isEmpty()) {
-                QString winnerMsg = QString("Player %1 wins! Play again?").arg(winner == "player1" ? currentUser : "A.I.");
-                game_ui->label_2->setText("Current Player:");
+                QString winnerMsg = QString("%1 wins! Play again?").arg(winner == "player1" ? currentUser : "Computer");
+                if(winner == "player1"){
+                    victorySound();
+                    DbManager::instance().addWinPoint(currentUserId);
+                    emit winGame(currentUserId);
+                    game_ui->label_2->setText("Current Player:");
 
-                QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", winnerMsg,
-                                              QMessageBox::No | QMessageBox::Yes);
-                if (reply == QMessageBox::Yes) {
-                    spinner->start();
-                    QTimer::singleShot(500, this, [this]() {
-                        spinner->stop();
-                    });
-                    startGame();
-                } else {
-                    emit returnToLobby();
-                    startGame();
+                    QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", winnerMsg,
+                                                                              QMessageBox::No | QMessageBox::Yes);
+                    if (reply == QMessageBox::Yes) {
+                        spinner->start();
+                        QTimer::singleShot(500, this, [this]() {
+                            spinner->stop();
+                        });
+                        startGame();
+                    } else {
+                        emit returnToLobby();
+                        startGame();
+                    }
+                }
+                else{
+                    game_ui->label_2->setText("Current Player:");
+
+                    QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", winnerMsg,
+                                                                              QMessageBox::No | QMessageBox::Yes);
+                    if (reply == QMessageBox::Yes) {
+                        spinner->start();
+                        QTimer::singleShot(500, this, [this]() {
+                            spinner->stop();
+                        });
+                        startGame();
+                    } else {
+                        emit returnToLobby();
+                        startGame();
+                    }
                 }
             }
             //keeps checking if both players' turns end. When there's no winner, draw
             else if(max_turn == 9) {
+                losingSound();
                 QString drawMsg = QString("Draw! Play again?");
                 game_ui->label_2->setText("Current Player:");
 
@@ -170,7 +197,6 @@ void Tictactoe::startGame(){
     game_ui->label_2->setText("Current Player: " + currentUser);
 }
 
-
 std::pair<QString, std::pair<QString, QString>> Tictactoe::checkWinner(QString board[ROW_COL][ROW_COL]){
     QString p1 = "player1", p2 = "player2";
     for(int i = 0; i < ROW_COL; i++){
@@ -231,63 +257,39 @@ std::pair<QString, std::pair<QString, QString>> Tictactoe::checkWinner(QString b
     return std::make_pair("",std::make_pair("",""));
 }
 
+void Tictactoe::soundEffect() {
+    m_player = new QMediaPlayer;
+    m_audioOutput = new QAudioOutput;
+    m_player->setAudioOutput(m_audioOutput);
+
+    m_player->setSource(QUrl("qrc:/bgm/pop.mp3"));
+    m_player->play();
+}
+
+void Tictactoe::victorySound() {
+    m_player = new QMediaPlayer;
+    m_audioOutput = new QAudioOutput;
+    m_player->setAudioOutput(m_audioOutput);
+
+    m_player->setSource(QUrl(":/bgm/victory.mp3"));
+    m_player->play();
+}
+
+void Tictactoe::losingSound() {
+    m_player = new QMediaPlayer;
+    m_audioOutput = new QAudioOutput;
+    m_player->setAudioOutput(m_audioOutput);
+
+    m_player->setSource(QUrl("qrc:/bgm/losing.mp3"));
+    m_player->play();
+}
+
+void Tictactoe::resetUser() {
+    currentUser = "";
+    game_ui->label_2->setText("Current Player:");
+}
+
 Tictactoe::~Tictactoe()
 {
     delete game_ui;
 }
-
-// int minimax(int depth, bool isMax) {
-    // int score = evaluate();
-
-    // if (score == 10) return score - depth;
-    // if (score == -10) return score + depth;
-    // if (!isMovesLeft()) return 0;
-
-    // if (isMax) {
-        // int best = -1000;
-        // for (int i = 0; i < 3; i++) {
-            // for (int j = 0; j < 3; j++) {
-                // if (board[i][j] == EMPTY) {
-                    // board[i][j] = PLAYER_X;
-                    // best = max(best, minimax(depth + 1, !isMax));
-                    // board[i][j] = EMPTY;
-                // }
-            // }
-        // }
-        // return best;
-    // } else {
-        // int best = 1000;
-        // for (int i = 0; i < 3; i++) {
-            // for (int j = 0; j < 3; j++) {
-                // if (board[i][j] == EMPTY) {
-                    // board[i][j] = PLAYER_O;
-                    // best = min(best, minimax(depth + 1, !isMax));
-                    // board[i][j] = EMPTY;
-                // }
-            // }
-        // }
-        // return best;
-    // }
-// }
-
-// std::pair<int,int> findBestMove() {
-    // int bestVal = -1000;
-    // int bestRow = -1, bestCol = -1;
-
-    // for (int i = 0; i < 3; i++) {
-        // for (int j = 0; j < 3; j++) {
-            // if (board[i][j] == EMPTY) {
-                // board[i][j] = PLAYER_X;
-                // int moveVal = minimax(0, false);
-                // board[i][j] = EMPTY;
-
-                // if (moveVal > bestVal) {
-                    // bestRow = i;
-                    // bestCol = j;
-                    // bestVal = moveVal;
-                // }
-            // }
-        // }
-    // }
-    // return bestMove;
-// }

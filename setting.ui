@@ -99,14 +99,14 @@ QSlider::add-page:horizontal {
     <rect>
      <x>30</x>
      <y>30</y>
-     <width>41</width>
-     <height>41</height>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Klee</family>
-     <pointsize>20</pointsize>
+     <pointsize>30</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>
@@ -188,12 +188,36 @@ QPushButton:pressed{
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="title">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>70</y>
+     <width>311</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Klee</family>
+     <pointsize>80</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgba(0,0,0,148)
+;background: white;</string>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </widget>
   <zorder>bg</zorder>
   <zorder>volumeSlider</zorder>
   <zorder>label</zorder>
   <zorder>volume</zorder>
   <zorder>backBtn</zorder>
   <zorder>musicState</zorder>
+  <zorder>title</zorder>
  </widget>
  <resources/>
  <connections/>

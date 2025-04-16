@@ -59,14 +59,14 @@
     <rect>
      <x>30</x>
      <y>30</y>
-     <width>41</width>
-     <height>41</height>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Klee</family>
-     <pointsize>20</pointsize>
+     <pointsize>30</pointsize>
      <bold>true</bold>
     </font>
    </property>

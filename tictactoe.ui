@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>90</y>
+     <y>110</y>
      <width>781</width>
-     <height>701</height>
+     <height>681</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -173,7 +173,7 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>10</y>
+     <y>40</y>
      <width>261</width>
      <height>51</height>
     </rect>
@@ -234,14 +234,14 @@
     <rect>
      <x>30</x>
      <y>40</y>
-     <width>41</width>
-     <height>41</height>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Klee</family>
-     <pointsize>20</pointsize>
+     <pointsize>30</pointsize>
      <bold>true</bold>
     </font>
    </property>

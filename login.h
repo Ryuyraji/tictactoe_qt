@@ -16,18 +16,18 @@ class Login : public QWidget
 
 public:
     Login(QWidget *parent = nullptr);
-    Login(Lobby *lobby, QWidget *parent = nullptr);
     ~Login();
     void make_account();
     void compare(); // id일치 불일치rememberCheck
     void setTitleShadow();
     bool getLoginState();
+    void setLoginState(bool);
     static Login& instance();
-    QString currentUser() const;
 
 signals:
     void goToCreateAccount();
     void returnToLobby();
+    void login();
     void loginSucceed(QString);
 
 private:

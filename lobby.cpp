@@ -38,6 +38,14 @@ QPushButton *Lobby::getButton(){
     return lobby_ui->loginBtn;
 }
 
+void Lobby::setLoginButton(){
+    lobby_ui->loginBtn->setText("My Account");
+}
+
+void Lobby::setAccountButton(){
+    lobby_ui->loginBtn->setText("Login");
+}
+
 Lobby::~Lobby()
 {
     delete lobby_ui;

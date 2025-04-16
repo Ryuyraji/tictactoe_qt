@@ -2,9 +2,11 @@
 #include "./ui_setting.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QGraphicsDropShadowEffect>
 
 Setting::Setting(QWidget *parent) : QWidget(parent), setting_ui(new Ui::Form) {
     setting_ui->setupUi(this);
+    setTitleShadow();
 
     connect(setting_ui->backBtn, &QPushButton::clicked, this, [=](){
         emit returnToLobby();
@@ -56,6 +58,13 @@ void Setting::stopMusic(){
     if (state == QMediaPlayer::PlayingState) {
         m_player->stop();
     }
+}
+void Setting::setTitleShadow(){
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(12);
+    shadow->setColor(QColor(0, 0, 0, 200));
+    shadow->setOffset(7, 7);
+    setting_ui->title->setGraphicsEffect(shadow);
 }
 
 void Setting::sliderValueChange(int val){

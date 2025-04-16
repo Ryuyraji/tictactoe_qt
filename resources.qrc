@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>bgm/bgm.mp3</file>
         <file>img/tictactoe.png</file>
+        <file>bgm/pop.mp3</file>
+        <file>bgm/losing.mp3</file>
+        <file>bgm/victory.mp3</file>
     </qresource>
 </RCC>

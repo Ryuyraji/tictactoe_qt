@@ -20,7 +20,7 @@ public:
     QString retrieveUserNickname(const QString&);
     static DbManager& instance();
     QSqlDatabase& getDatabase();
-    QStringList fetchUserInfo();//정보 가져오기
+    QList<QStringList> fetchUserInfo();
     bool updateNickname(const QString&,const QString&);
     bool removeAccount(const QString&);
 private:

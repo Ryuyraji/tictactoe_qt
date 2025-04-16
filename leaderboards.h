@@ -21,12 +21,14 @@ class Leaderboards : public QWidget
 public:
     explicit Leaderboards(QWidget *parent = nullptr);
     void setTitleShadow();
+    void setUserLeaderboard();
     ~Leaderboards();
 signals:
     void returnToLobby();
 private:
     Ui::leaderboards *leaderboard_ui;
     class QListWidget *player_list;
+    QVector<Users>account;
 };
 
 #endif // LEADERBOARDS_H

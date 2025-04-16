@@ -21,21 +21,35 @@ Leaderboards::Leaderboards(QWidget *parent)
         emit returnToLobby();
     });
 
-    QSqlQuery query(DbManager::instance().getDatabase());
-    query.prepare("SELECT id, user_nickname, winPoint, lossPoint FROM userTable");
+    setUserLeaderboard();
 
-    if (!query.exec()) {
-        qDebug() << "Query failed:" << query.lastError().text();
-        return;
-    }
+    connect(leaderboard_ui->searchBar, &QLineEdit::textChanged, this, [=](QString str){
+        leaderboard_ui->leaderboard->clear();
+        for(auto &it : account){
+            if(str.isEmpty() || it.nickname.contains(str, Qt::CaseInsensitive)){
+                double winrate = (double)it.win / (it.win+it.loss) * 100;
+                QString num = "#" + QString::number(it.id);
+                  QString text = QString("%1  :  %2  |  Wins: %3  |  Losses: %4  |  WinRate: %5")
+                   .arg(num)
+                  .arg(it.nickname)
+                      .arg(it.win)
+                      .arg(it.loss)
+                      .arg(winrate, 0, 'f', 2);
+                  leaderboard_ui->leaderboard->addItem(text);
+            }
+        }
+    });
+}
 
-    QVector<Users>account;
-    while (query.next()) {
+void Leaderboards::setUserLeaderboard(){
+    account.clear();
+    QList userList = DbManager::instance().fetchUserInfo();
+    for(auto &it : userList){
         Users user;
-        user.id = query.value("id").toInt();
-        user.nickname = query.value("user_nickname").toString();
-        user.win = query.value("winPoint").toInt();
-        user.loss = query.value("lossPoint").toInt();
+        user.id = it[0].toInt();
+        user.nickname = it[2];
+        user.win = it[3].toInt();
+        user.loss = it[4].toInt();
         account.push_back(user);
     }
 
@@ -61,23 +75,6 @@ Leaderboards::Leaderboards(QWidget *parent)
               .arg(winrate, 0, 'f', 2);
           leaderboard_ui->leaderboard->addItem(text);
     }
-    connect(leaderboard_ui->searchBar, &QLineEdit::textChanged, this, [=](QString str){
-        leaderboard_ui->leaderboard->clear();
-        for(auto &it : account){
-            if(str.isEmpty() || it.nickname.contains(str, Qt::CaseInsensitive)){
-                double winrate = (double)it.win / (it.win+it.loss) * 100;
-                QString num = "#" + QString::number(it.id);
-                  QString text = QString("%1  :  %2  |  Wins: %3  |  Losses: %4  |  WinRate: %5")
-                   .arg(num)
-                  .arg(it.nickname)
-                      .arg(it.win)
-                      .arg(it.loss)
-                      .arg(winrate, 0, 'f', 2);
-                  leaderboard_ui->leaderboard->addItem(text);
-            }
-        }
-    });
-
 }
 
 void Leaderboards::setTitleShadow(){
@@ -87,6 +84,7 @@ void Leaderboards::setTitleShadow(){
     shadow->setOffset(7, 7);                 // offset (x, y)
     leaderboard_ui->title->setGraphicsEffect(shadow);
 }
+
 Leaderboards::~Leaderboards()
 {
     delete leaderboard_ui;

@@ -15,6 +15,8 @@ public:
     explicit Lobby(QWidget *parent = nullptr);
     class QPushButton *getButton();
     void setTitleShadow();
+    void setLoginButton();
+    void setAccountButton();
     ~Lobby();
 signals:
     void goToLogin();

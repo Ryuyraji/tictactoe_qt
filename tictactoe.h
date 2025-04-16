@@ -20,12 +20,15 @@ public:
     std::pair<QString,std::pair<QString, QString>> checkWinner(QString[ROW_COL][ROW_COL]);
     void startGame();
     void setSpinner();
-    void drawWinningLine(bool, std::pair<QString, QString>);
-    void minmax(int);
-    void bestMove();
+    void resetUser();
+    void soundEffect();
+    void victorySound();
+    void losingSound();
 
 signals:
     void returnToLobby();
+    void winGame(QString);
+    //void loseGame();
 
 private:
     Ui::tictactoe_ui *game_ui;
@@ -36,5 +39,9 @@ private:
     bool whichPlayer;
     int max_turn;
     QString currentUser;
+    QString currentUserId;
+    class QMediaPlayer *m_player;
+    class QAudioOutput *m_audioOutput;
+    QPair<int, int> moveable;
 };
 #endif // TICTACTOE_H
