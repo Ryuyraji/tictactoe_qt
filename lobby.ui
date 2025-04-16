@@ -31,7 +31,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>20</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -69,7 +69,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>20</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -107,7 +107,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>20</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -145,7 +145,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>20</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -183,7 +183,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>20</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -221,7 +221,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>120</pointsize>
      <italic>true</italic>
      <bold>true</bold>

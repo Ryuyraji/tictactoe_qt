@@ -172,14 +172,15 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>250</x>
      <y>40</y>
-     <width>261</width>
+     <width>281</width>
      <height>51</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>55</pointsize>
     </font>
    </property>
@@ -201,6 +202,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>15</pointsize>
     </font>
    </property>
@@ -240,7 +242,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>30</pointsize>
      <bold>true</bold>
     </font>

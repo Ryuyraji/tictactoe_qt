@@ -42,7 +42,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>30</pointsize>
      <bold>true</bold>
     </font>
@@ -76,7 +76,7 @@ QPushButton:pressed{
    </property>
    <property name="font">
     <font>
-     <family>Klee</family>
+     <family>Arial</family>
      <pointsize>80</pointsize>
     </font>
    </property>
