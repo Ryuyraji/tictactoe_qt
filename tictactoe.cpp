@@ -104,8 +104,10 @@ Tictactoe::Tictactoe(QWidget *parent)
                 }
                 else{
                     game_ui->label_2->setText("Current Player:");
+                    DbManager::instance().addLossPoint(currentUserId);
+                    emit loseGame(currentUserId);
 
-                    QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", winnerMsg,
+                    QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", "You lost! " + winnerMsg,
                                                                               QMessageBox::No | QMessageBox::Yes);
                     if (reply == QMessageBox::Yes) {
                         spinner->start();

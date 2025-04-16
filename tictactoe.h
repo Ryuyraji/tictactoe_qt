@@ -28,7 +28,7 @@ public:
 signals:
     void returnToLobby();
     void winGame(QString);
-    //void loseGame();
+    void loseGame(QString);
 
 private:
     Ui::tictactoe_ui *game_ui;

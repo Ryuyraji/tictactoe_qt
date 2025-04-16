@@ -102,6 +102,7 @@ void MyPage::setUser(QString id){
                 loss = it[4];
             }
         }
+        myPage_ui->account->setText(id);
         myPage_ui->nickname->setText(userNickname);
 
         myPage_ui->winPointLabel->setText("Win: " + win);

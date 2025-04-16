@@ -105,6 +105,11 @@ MyGame::MyGame(QWidget *parent)
         leaderboards_window->setUserLeaderboard();
     });
 
+    connect(game_window, &Tictactoe::loseGame, this, [=](QString id){
+        myPage_window->setUser(id);
+        leaderboards_window->setUserLeaderboard();
+    });
+
     connect(leaderboards_window, &Leaderboards::returnToLobby, this, [=](){
         stack->setCurrentIndex(LOBBY);
     });
