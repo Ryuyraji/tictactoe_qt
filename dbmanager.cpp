@@ -157,6 +157,24 @@ bool DbManager::findUserNickname(const QString& nickname){
     return success;
 }
 
+QString DbManager::retrieveUserNickname(const QString& id){
+    QSqlQuery query(m_db);
+    query.prepare("SELECT user_nickname FROM userTable WHERE user_id=:USER_ID");
+    query.bindValue(":USER_ID", id);
+    if(query.exec()){
+        if (query.next()) {
+            return query.value(0).toString();
+        }
+        else {
+            qDebug() << "findAccountInfo query error:" << query.lastError();
+        }
+    }
+    else{
+        qDebug() << "User ID not found\n";
+    }
+    return "";
+}
+
 QString DbManager::getConnectionName() const{
     return db_connectionName;
 }

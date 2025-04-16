@@ -17,6 +17,7 @@ public:
     bool findAccountInfo(const QString&, const QString&);
     bool findUserID(const QString&);
     bool findUserNickname(const QString&);
+    QString retrieveUserNickname(const QString&);
     static DbManager& instance();
     QSqlDatabase& getDatabase();
     QStringList fetchUserInfo();//정보 가져오기

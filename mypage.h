@@ -18,15 +18,17 @@ public:
     explicit MyPage(QWidget *parent = nullptr);
     ~MyPage();
 
-private slots:
-    void removeAccount();
-
+signals:
+    void logout();
 private:
     Ui::MyPage *ui;
     QString userId;  // 로그인한 사용자의 ID
     QString userNickname;  // 로그인한 사용자의 닉네임
     QString newNickname;
     QPushButton updateBtn;
+    QPushButton deleteBtn;
+    QPushButton logoutBtn;
+
 };
 
 #endif // MYPAGE_H

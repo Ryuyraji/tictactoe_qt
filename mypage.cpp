@@ -19,6 +19,9 @@ MyPage::MyPage(QWidget *parent)
     // 로그인 시 가져온 사용자 ID (로그인 후 저장된 userId)
     connect(&Login::instance(), &Login::loginSucceed, this, [&](QString userInfo){
         userId = userInfo;
+        userNickname = DbManager::instance().retrieveUserNickname(userId);
+        qDebug() << "MyPage: " << userNickname << "\n";
+        ui->nickname->setText(userNickname);
     });
 
     // 내 정보 가져오기
@@ -55,11 +58,16 @@ MyPage::MyPage(QWidget *parent)
             // 계정 삭제
             if (DbManager::instance().removeAccount(userId)) {
                 QMessageBox::information(this, "삭제 완료", "계정이 삭제되었습니다.");
-                // 삭제 후 로그인 화면 등으로 이동하는 로직을 추가할 수 있습니다.
+                emit logout();
             } else {
                 QMessageBox::critical(this, "계정 삭제", "계정 삭제에 실패했습니다.");
             }
         }
+    });
+
+
+    connect(ui->logoutBtn, &QPushButton::clicked, this, [=]() {
+        emit logout();
     });
 }
 
@@ -68,30 +76,3 @@ MyPage::~MyPage()
     delete ui;
 }
 
-
-// 계정 삭제
-void MyPage::removeAccount() {
-    // 계정 삭제 확인
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "계정 삭제", "정말로 계정을 삭제하시겠습니까?",
-                                  QMessageBox::Yes | QMessageBox::No);
-
-    if (reply == QMessageBox::Yes) {
-        // 데이터베이스에서 계정 삭제
-        QSqlQuery query(DbManager::instance().getDatabase());
-        query.prepare("DELETE FROM userTable WHERE user_id = :user_id");
-        query.bindValue(":user_id", userId);  // 로그인한 사용자의 ID
-
-        if (!query.exec()) {
-            qDebug() << "Delete failed: " << query.lastError().text();
-            QMessageBox::critical(this, "계정 삭제", "계정 삭제에 실패했습니다.");
-            return;
-        }
-
-        // 삭제 완료 시 사용자에게 알림
-        QMessageBox::information(this, "삭제 완료", "계정이 삭제되었습니다.");
-
-        // 삭제 후 처리
-        // emit accountDeleted();  // 계정 삭제 후 로비 화면으로 돌아가기 등
-    }
-}
