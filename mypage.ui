@@ -144,13 +144,6 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="2">
-       <widget class="QPushButton" name="deleteBtn">
-        <property name="text">
-         <string>삭제하기</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="label_2">
         <property name="text">
@@ -188,6 +181,45 @@
     <string>수정하기</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="deleteBtn">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>200</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>계정삭제</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="account">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>210</y>
+     <width>58</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>account</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="logoutBtn">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>250</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>로그아웃</string>
+   </property>
+  </widget>
   <zorder>layoutWidget</zorder>
   <zorder>bg</zorder>
   <zorder>page</zorder>
@@ -197,6 +229,9 @@
   <zorder>lossPointLabel</zorder>
   <zorder>nickname</zorder>
   <zorder>updateBtn</zorder>
+  <zorder>deleteBtn</zorder>
+  <zorder>account</zorder>
+  <zorder>logoutBtn</zorder>
  </widget>
  <resources/>
  <connections/>
