@@ -5,14 +5,21 @@
 #include <QTimer>
 #include <QColor>
 #include <QFrame>
+#include "Login.h"
 
 Tictactoe::Tictactoe(QWidget *parent)
     : QWidget(parent) , game_ui(new Ui::tictactoe_ui)
 {
     game_ui->setupUi(this);
 
+    currentUser = "";
     setSpinner();
     startGame();
+
+    connect(&Login::instance(), &Login::loginSucceed, this, [&](QString userInfo){
+        currentUser = userInfo;
+        game_ui->label_2->setText("Current Player: " + userInfo);
+    });
 
     connect(game_ui->backBtn, &QPushButton::clicked, this, [=](){
       QString warningMsg = QString("Do you really want to go back to Lobby?");
@@ -33,31 +40,30 @@ Tictactoe::Tictactoe(QWidget *parent)
             // Set font and text
             QFont font = btn->font();
             font.setFamily("Klee");
-            font.setBold(true);
-            font.setPixelSize(btn->height()); // Scales with button
+            font.setPixelSize(200);  // 60% of button size, adjust as needed
             btn->setFont(font);
 
             QString symbol;
             if(whichPlayer == 0){
                 symbol= "X";
-                game_ui->label_2->setText("Current Player: Player2");
+                game_ui->label_2->setText("Current Player: A.I.");
                 btn->setText(symbol);
                 btn->setStyleSheet("QPushButton{"
-                                   "border: none;"
+                                   "border: red;"
                                    "color: red;"
                                    "}");
             }
             else{
                 symbol = "O";
-                game_ui->label_2->setText("Current Player: Player1");
+                game_ui->label_2->setText("Current Player: "+currentUser);
                 btn->setText(symbol);
                 btn->setStyleSheet("QPushButton{"
-                                   "border: none;"
+                                   "border: blue;"
                                    "color: blue;"
                                    "}");
             }
 
-            whichPlayer = 1 - whichPlayer; // Toggle player
+            whichPlayer = 1 - whichPlayer;
 
             // Parse position from accessibleName
             QString pos = btn->accessibleName();
@@ -69,9 +75,7 @@ Tictactoe::Tictactoe(QWidget *parent)
             QString winner = checkWinner(board).first;
             std::pair<QString, QString> coordinate = checkWinner(board).second;
             if(!winner.isEmpty()) {
-                // FIX:
-                // drawWinningLine(whichPlayer, coordinate);
-                QString winnerMsg = QString("Player %1 wins! Play again?").arg(winner == "player1" ? 1 : 2);
+                QString winnerMsg = QString("Player %1 wins! Play again?").arg(winner == "player1" ? currentUser : "A.I.");
                 game_ui->label_2->setText("Current Player:");
 
                 QMessageBox::StandardButton reply = QMessageBox::question(this, "Game Over", winnerMsg,
@@ -81,8 +85,6 @@ Tictactoe::Tictactoe(QWidget *parent)
                     QTimer::singleShot(500, this, [this]() {
                         spinner->stop();
                     });
-                    // FIX:
-                    // winLine->hide();
                     startGame();
                 } else {
                     emit returnToLobby();
@@ -126,10 +128,6 @@ void Tictactoe::setSpinner(){
 }
 
 void Tictactoe::startGame(){
-    // FIX:
-    // winLine = new QFrame(this);
-    // winLine->hide();
-
     // Initialize board and buttons
     for (int i = 0; i < ROW_COL; ++i)
         for (int j = 0; j < ROW_COL; ++j)
@@ -145,12 +143,21 @@ void Tictactoe::startGame(){
             game_ui->Btn10, game_ui->Btn11, game_ui->Btn12,
             game_ui->Btn20, game_ui->Btn21, game_ui->Btn22};
 
+    game_ui->gridLayout->setSpacing(3);
+    game_ui->gridLayout->setContentsMargins(1, 1, 1, 1);
+
     // Reset all buttons
     for (auto &btn : btns) {
         btn->setText("");
-        btn->setStyleSheet("");
-        btn->setFont(QFont());
-        btn->setFixedSize(245,173);
+        btn->setStyleSheet( "QPushButton{"
+                            "color: white;"
+                            "background-color: rgba(0, 0, 0, 148);"
+                            "border: none;}"
+                            "QPushButton:hover{"
+                            "background-color: rgb(190, 190, 190);}"
+                            "QPushButton:pressed{"
+                            "background-color: rgb(170, 170, 170);}");
+        btn->setMaximumSize(250, 250);
     }
 
     // Set accessible names
@@ -158,7 +165,7 @@ void Tictactoe::startGame(){
         btns[i]->setAccessibleName(positions[i]);
 
     whichPlayer = max_turn = 0;
-    game_ui->label_2->setText("Current Player: Player1");
+    game_ui->label_2->setText("Current Player: " + currentUser);
 }
 
 
@@ -227,79 +234,58 @@ Tictactoe::~Tictactoe()
     delete game_ui;
 }
 
-// FIX:
-// void tictactoe::drawWinningLine(bool whichPlayer, std::pair<QString, QString> coordinate) {
-// if(whichPlayer == 1){
-// winLine->setStyleSheet("background-color: red;");
-// }
-// else{
-// winLine->setStyleSheet("background-color: blue;");
-// }
-// QPushButton* btn0, *btn1, *btn2;
-// QPoint x, y;
+// int minimax(int depth, bool isMax) {
+    // int score = evaluate();
 
-// if(coordinate.first == "00" && coordinate.second == "02"){
-// btn0 = ui->Btn00;
-// btn1 = ui->Btn01;
-// btn2 = ui->Btn02;
+    // if (score == 10) return score - depth;
+    // if (score == -10) return score + depth;
+    // if (!isMovesLeft()) return 0;
 
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
+    // if (isMax) {
+        // int best = -1000;
+        // for (int i = 0; i < 3; i++) {
+            // for (int j = 0; j < 3; j++) {
+                // if (board[i][j] == EMPTY) {
+                    // board[i][j] = PLAYER_X;
+                    // best = max(best, minimax(depth + 1, !isMax));
+                    // board[i][j] = EMPTY;
+                // }
+            // }
+        // }
+        // return best;
+    // } else {
+        // int best = 1000;
+        // for (int i = 0; i < 3; i++) {
+            // for (int j = 0; j < 3; j++) {
+                // if (board[i][j] == EMPTY) {
+                    // board[i][j] = PLAYER_O;
+                    // best = min(best, minimax(depth + 1, !isMax));
+                    // board[i][j] = EMPTY;
+                // }
+            // }
+        // }
+        // return best;
+    // }
 // }
-// else if(coordinate.first == "10" && coordinate.second == "12"){
-// btn0 = ui->Btn10;
-// btn1 = ui->Btn11;
-// btn2 = ui->Btn12;
 
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "20" && coordinate.second == "22"){
-// btn0 = ui->Btn20;
-// btn1 = ui->Btn21;
-// btn2 = ui->Btn22;
+// std::pair<int,int> findBestMove() {
+    // int bestVal = -1000;
+    // int bestRow = -1, bestCol = -1;
 
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "00" && coordinate.second == "20"){
-// btn0 = ui->Btn00;
-// btn1 = ui->Btn10;
-// btn2 = ui->Btn20;
+    // for (int i = 0; i < 3; i++) {
+        // for (int j = 0; j < 3; j++) {
+            // if (board[i][j] == EMPTY) {
+                // board[i][j] = PLAYER_X;
+                // int moveVal = minimax(0, false);
+                // board[i][j] = EMPTY;
 
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "01" && coordinate.second == "21"){
-// btn0 = ui->Btn01;
-// btn1 = ui->Btn11;
-// btn2 = ui->Btn21;
-
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "02" && coordinate.second == "22"){
-// btn0 = ui->Btn02;
-// btn1 = ui->Btn12;
-// btn2 = ui->Btn22;
-
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "diagonal"){
-// btn0 = ui->Btn00;
-// btn1 = ui->Btn11;
-// btn2 = ui->Btn22;
-
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// else if(coordinate.first == "rdiagonal"){
-// btn0 = ui->Btn02;
-// btn1 = ui->Btn11;
-// btn2 = ui->Btn20;
-
-// if (!btn0 || !btn1 || !btn2 || !winLine) return;
-// }
-// x = btn0->mapTo(this, QPoint(0, btn0->height() / 2));
-// y = btn2->mapTo(this, QPoint(0, btn2->height() / 2));
-// int lineLength = btn0->width() * 3+32;
-// int lineThickness = 5;
-// qDebug() << x.x() << " " << y.y() << "\n";
-
-// winLine->setGeometry(x.x(), y.y(), lineLength, lineThickness);
-// winLine->show();
+                // if (moveVal > bestVal) {
+                    // bestRow = i;
+                    // bestCol = j;
+                    // bestVal = moveVal;
+                // }
+            // }
+        // }
+    // }
+    // return bestMove;
 // }

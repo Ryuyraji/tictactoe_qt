@@ -8,7 +8,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-//enum WINDOWS { LOBBY, LOGIN, CREATE_ACCOUNT, INGAME, LEADERBOARDS, SETTING };
+// enum WINDOWS { LOBBY, LOGIN, CREATE_ACCOUNT, MYPAGE, INGAME, LEADERBOARDS, SETTING };
 MyGame::MyGame(QWidget *parent)
     : QWidget(parent)
 {
@@ -29,6 +29,9 @@ MyGame::MyGame(QWidget *parent)
     Account *create_account_window = new Account;
     stack->addWidget(create_account_window);
 
+    QWidget *myPage_window = new QWidget;
+    stack->addWidget(myPage_window);
+
     Tictactoe *game_window = new Tictactoe;
     stack->addWidget(game_window);
 
@@ -43,8 +46,17 @@ MyGame::MyGame(QWidget *parent)
 
     // signals & slots for each buttons
     connect(lobby_window, &Lobby::goToLogin, this, [=](){
-        stack->setCurrentIndex(LOGIN);
+        if(login_window->getLoginState()){
+            stack->setCurrentIndex(MYPAGE);
+        }
+        else{
+            stack->setCurrentIndex(LOGIN);
+        }
     });
+
+    // connect(myPage_window, &MyPage::returnToLobby, this, [&](){
+        // stack->setCurrentIndex(LOBBY);
+    // });
 
     connect(login_window, &Login::returnToLobby, this, [&](){
         stack->setCurrentIndex(LOBBY);

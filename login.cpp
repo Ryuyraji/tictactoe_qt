@@ -10,11 +10,14 @@
 #include <QInputDialog>
 #include <QGraphicsDropShadowEffect>
 
+Login::Login(QWidget *parent){}
+
 Login::Login(Lobby *lobby, QWidget *parent)
     : m_lobby(lobby), QWidget(parent), login_ui(new Ui::Login)
 {
     login_ui->setupUi(this);
     setTitleShadow();
+    loginState = false;
     // 전체 레이아웃
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -65,7 +68,8 @@ Login::Login(Lobby *lobby, QWidget *parent)
             idInput->clear();
             pwInput->clear();
             m_lobby->getButton()->setText("My Account");
-            m_lobby->setAccessibleName("MyAccount");
+            loginState = true;
+            Login::instance().emit loginSucceed(user_id);
             emit returnToLobby();
         } else {
             QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 틀렸습니다.");
@@ -93,4 +97,18 @@ void Login::setTitleShadow(){
     shadow->setOffset(7, 7);
     login_ui->title->setGraphicsEffect(shadow);
 }
+
+bool Login::getLoginState(){
+    return loginState;
+}
+
+Login& Login::instance() {
+    static Login _instance;
+    return _instance;
+}
+
+QString Login::currentUser() const {
+    return user_id;
+}
+
 Login::~Login() {}

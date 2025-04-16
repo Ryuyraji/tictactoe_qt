@@ -15,16 +15,20 @@ class Login : public QWidget
     Q_OBJECT
 
 public:
+    Login(QWidget *parent = nullptr);
     Login(Lobby *lobby, QWidget *parent = nullptr);
     ~Login();
     void make_account();
     void compare(); // id일치 불일치rememberCheck
     void setTitleShadow();
+    bool getLoginState();
+    static Login& instance();
+    QString currentUser() const;
 
 signals:
     void goToCreateAccount();
     void returnToLobby();
-    void loginSucceed();
+    void loginSucceed(QString);
 
 private:
     Lobby *m_lobby;
@@ -32,5 +36,6 @@ private:
     QString user_id;
     class QLineEdit *idInput;
     class QLineEdit *pwInput;
+    bool loginState;
 };
 #endif // LOGIN_H

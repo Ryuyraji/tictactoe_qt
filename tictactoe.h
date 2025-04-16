@@ -21,6 +21,8 @@ public:
     void startGame();
     void setSpinner();
     void drawWinningLine(bool, std::pair<QString, QString>);
+    void minmax(int);
+    void bestMove();
 
 signals:
     void returnToLobby();
@@ -33,6 +35,6 @@ private:
     QString board[3][3];
     bool whichPlayer;
     int max_turn;
-    // class QFrame *winLine;
+    QString currentUser;
 };
 #endif // TICTACTOE_H
