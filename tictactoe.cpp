@@ -1,11 +1,12 @@
 #include "tictactoe.h"
 #include "./ui_tictactoe.h"
+#include "Login.h"
+#include "dbmanager.h"
 #include <QFont>
 #include <QMessageBox>
 #include <QTimer>
 #include <QColor>
 #include <QFrame>
-#include "Login.h"
 
 Tictactoe::Tictactoe(QWidget *parent)
     : QWidget(parent) , game_ui(new Ui::tictactoe_ui)
@@ -18,7 +19,8 @@ Tictactoe::Tictactoe(QWidget *parent)
 
     connect(&Login::instance(), &Login::loginSucceed, this, [&](QString userInfo){
         currentUser = userInfo;
-        game_ui->label_2->setText("Current Player: " + userInfo);
+        QString userNickname = DbManager::instance().retrieveUserNickname(userInfo);
+        game_ui->label_2->setText("Current Player: " + userNickname);
     });
 
     connect(game_ui->backBtn, &QPushButton::clicked, this, [=](){
@@ -55,7 +57,7 @@ Tictactoe::Tictactoe(QWidget *parent)
             }
             else{
                 symbol = "O";
-                game_ui->label_2->setText("Current Player: "+currentUser);
+                game_ui->label_2->setText("Current Player: "+ currentUser);
                 btn->setText(symbol);
                 btn->setStyleSheet("QPushButton{"
                                    "border: blue;"

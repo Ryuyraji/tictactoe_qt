@@ -1,1 +1,1 @@
-# Veda QT Project 
+# Veda QT Project
